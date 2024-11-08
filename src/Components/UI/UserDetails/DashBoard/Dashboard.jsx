@@ -4,7 +4,6 @@ import styled from "styled-components";
 import SelectInput from "../../SelectInput";
 import { useNavigate } from "react-router-dom";
 import { setSelectedAccount } from "../../../../redux/clientSlice";
-import { title } from "framer-motion/client";
 
 const DashboradContainer = styled.div`
     border-right: solid 1px;

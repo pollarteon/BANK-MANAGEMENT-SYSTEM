@@ -17,7 +17,7 @@ export default function Loans(){
     const loans = account.loans;
     return (
         <LoansStyle>
-            {loans.map((loan)=> <LoansBlock key={loan.loanId} loan={loan}/>)}
+            {loans.map((loan)=> <LoansBlock key={loan.id} loan={loan}/>)}
         </LoansStyle>
     )
 }

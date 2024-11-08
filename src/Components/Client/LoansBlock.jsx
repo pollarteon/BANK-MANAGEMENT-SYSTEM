@@ -13,14 +13,14 @@ const LoansBlockContainer = styled.div`
     }
 `
 const LoansIdStyle = styled.div`
-    background-color:${(props)=>props.backgroundcolor};;
+    background-color:${(props) => props.backgroundcolor};;
     color: black;
     font-family: sans-serif;
     font-size: 1.25em;
     padding: 0.25em;
 `
 
-export default function LoansBlock({ loan}) {
+export default function LoansBlock({ loan }) {
 
     const [showDropDown, setShowDropdown] = useState(false);
 
@@ -28,12 +28,12 @@ export default function LoansBlock({ loan}) {
         setShowDropdown((prev) => !prev);
     }
     let backgroundColor;
-    if(loan.status=='Active'){
-        backgroundColor='#ffba79';       
-    }else if(loan.status=='Closed'){
-        backgroundColor='#ff8d8d'
-    } else{
-        backgroundColor='#73ff51'
+    if (loan.status == 'Active') {
+        backgroundColor = '#ffba79';
+    } else if (loan.status == 'Closed') {
+        backgroundColor = '#ff8d8d'
+    } else {
+        backgroundColor = '#73ff51'
     }
 
     // loanId: 'loan003',
@@ -45,18 +45,24 @@ export default function LoansBlock({ loan}) {
     // status: 'Active',
 
     return (
-        <LoansBlockContainer  onClick={toggleDropdown}>
+        <LoansBlockContainer onClick={toggleDropdown}>
             <LoansIdStyle backgroundcolor={backgroundColor}>loan_ID : {loan.loanId}</LoansIdStyle>
-            <div style={{ display: 'flex', cursor:'pointer'}}>
+            <div style={{ display: 'flex', cursor: 'pointer' }}>
                 <Label label={'Amount'} value={loan.amount} />
                 <Label label={"Status"} value={loan.status} />
-                <Label label={"Start-Date"} value={loan.startDate} />
-                <Label label={'End-Date'} value={loan.endDate} />
+                <Label label={"Loan Term"} value={loan.loanTerm} />
+                <Label label={'Type'} value={loan.loanType.toUpperCase()} />
             </div>
-            {showDropDown && <div style={{ display: 'flex', cursor:'pointer'}}>
+            {showDropDown && <>
+            <div style={{ display: 'flex', cursor: 'pointer' }}>
                 <Label label={'Interest_Rate'} value={loan.interestRate} />
                 <Label label={'Monthly_Payment'} value={loan.monthlyPayment} />
-            </div>}
+            </div>
+            <div style={{ display: 'flex', cursor: 'pointer' }}>
+                <Label label={"Start-Date"} value={loan.startDate} />
+                <Label label={'End-Date'} value={loan.endDate} />
+            </div></>}
+
         </LoansBlockContainer>
     )
 }

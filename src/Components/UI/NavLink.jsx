@@ -16,16 +16,19 @@ const NavlinkContainer = styled.div`
     width: 9em;
     text-align:center;
     transition: all 50ms;
-
+    
 `
 
 const NavLinkStyled = styled(NavLink)`
-    color: ${(props)=>props.fontcolor||"white"};
+    color: ${(props)=>props.fontcolor||"black"};
     font-weight: 100;
     text-decoration: none;
     &.active{
         text-decoration: underline;
-        font-weight: bold;
+        font-weight: bolder;
+    }
+    &:hover{
+        font-weight: bolder;
     }
 `
 

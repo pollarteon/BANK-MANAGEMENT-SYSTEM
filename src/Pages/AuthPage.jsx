@@ -73,7 +73,7 @@ export default function AuthPage() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(formData);
-        // Add authentication logic here
+      
         if(formType=='register' && formData.password!==formData.confirm_password){
             console.log("invalid")
             setformValidity({

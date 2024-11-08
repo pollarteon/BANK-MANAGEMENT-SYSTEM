@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom"
 const NavContainer = styled.div`
     display: flex;
     flex-direction: row;
-    background-color: #003768;
+    background-color: #8ac9ff;
     height: 70px;
     align-items: center;
     justify-content: center;
@@ -31,7 +31,7 @@ const NavRight = styled.div`
     height: 100%;
     justify-content: end;
     align-items: center;
-    border-bottom:solid 2px #003768;
+    border-bottom:solid 2px #8bc9ff;
 `
 
 export default function NavBar() {
@@ -51,7 +51,7 @@ export default function NavBar() {
             </NavLeft>
             {isLoggedin &&  <Navlink linkTitle={"ACCOUNT"} /> }
             <NavRight>
-                {!isLoggedin?<Navlink linkTitle={"LOGIN/REGISTER"} fontColor={"#003768"} />:<Navlink linkTitle={"LOGOUT"} fontColor={"#003768"}></Navlink>}
+                {!isLoggedin?<Navlink linkTitle={"LOGIN/REGISTER"}  />:<Navlink linkTitle={"LOGOUT"} fontColor={"#000000"}></Navlink>}
             </NavRight>
         </NavContainer>
         </div>

@@ -17,7 +17,7 @@ const NavlinkContainer = styled.div`
 `
 
 const NavLinkStyled = styled.div`
-    color: ${(props)=>props.fontcolor||"white"};
+    color: ${(props)=>props.fontcolor||"black"};
     font-weight: 100;
     text-decoration: none;
     &.active{

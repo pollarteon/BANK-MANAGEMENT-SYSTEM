@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import Label from "./Label"
 import { useState } from "react"
-
+import { AnimatePresence, motion } from "framer-motion"
 
 const TransactionBlockContainer = styled.div`
     margin: 1em ;
@@ -13,7 +13,7 @@ const TransactionBlockContainer = styled.div`
     }
 `
 const TransactionIdStyle = styled.div`
-    background-color:${(props)=>props.backgroundcolor};;
+    background-color:${(props) => props.backgroundcolor};;
     color: black;
     font-family: sans-serif;
     font-size: 1.25em;
@@ -21,37 +21,53 @@ const TransactionIdStyle = styled.div`
 `
 
 export default function TransactionBlock({ transaction }) {
-
     const [showDropDown, setShowDropdown] = useState(false);
 
     const toggleDropdown = () => {
         setShowDropdown((prev) => !prev);
-    }
-    let backgroundColor;
-    if(transaction.status=='Pending'){
-        backgroundColor='#ffba79';
-    }else if(transaction.status=='Failed'){
-        backgroundColor='#ff8d8d'
-    }else{
-        backgroundColor='#73ff51'
-    }
+    };
+
+    // Set background color based on transaction status
+    const backgroundColor = transaction.status === 'Pending' ? '#ffba79' :
+        transaction.status === 'Failed' ? '#ff8d8d' : '#73ff51';
+
+    // Dropdown animation settings
+    const dropdownVariants = {
+        hidden: { opacity: 0, height: 0 },
+        visible: { opacity: 1, height: 'auto' },
+    };
 
     return (
-        <TransactionBlockContainer  onClick={toggleDropdown}>
-            <TransactionIdStyle backgroundcolor={backgroundColor}>Transaction_ID : {transaction.id}</TransactionIdStyle>
-            <div style={{ display: 'flex', cursor:'pointer'}}>
+        <TransactionBlockContainer onClick={toggleDropdown}>
+            <TransactionIdStyle backgroundcolor={backgroundColor}>
+                Transaction_ID : {transaction.id}
+            </TransactionIdStyle>
+            <div style={{ display: 'flex', cursor: 'pointer' }}>
                 <Label label={'Amount'} value={transaction.amount} />
                 <Label label={"Status"} value={transaction.status} />
                 <Label label={'Date'} value={transaction.date} />
             </div>
-            {showDropDown && <div style={{ display: 'flex', cursor:'pointer'}}>
-                {transaction.description.length > 0 &&
-                    <Label label={'Description'} value={transaction.description} isdescription={true}/>
-                }
-                <Label label={'Recipient Account_ID'} value={transaction.recipient} />
-                <Label label={'Type'} value={transaction.type} />
-            </div>}
+            <AnimatePresence>
+                {showDropDown && (
 
+                    <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                        variants={dropdownVariants}
+                        transition={{ duration: 0.1 }}
+                        style={{ display: 'flex', cursor: 'pointer', overflow: 'hidden' }}
+                    >
+                        {transaction.description.length > 0 && (
+                            <Label label={'Description'} value={transaction.description} isdescription={true} />
+                        )}
+                        <Label label={'Recipient Account_ID'} value={transaction.recipient} />
+                        <Label label={'Type'} value={transaction.type.toUpperCase()} />
+                    </motion.div>
+
+
+                )}
+            </AnimatePresence>
         </TransactionBlockContainer>
-    )
+    );
 }

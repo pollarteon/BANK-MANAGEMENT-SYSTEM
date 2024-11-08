@@ -22,7 +22,7 @@ export default function LoginForm({ setFormData, handleSubmit, formData, userTyp
             <form onSubmit={handleSubmit} className="auth-form" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: "center" }}>
 
                 <CustomInput  label={"E-MAIL"} type="email" name="email" value={formData.email} onChange={handleChange} required />
-                <CustomInput label={"PASSWORD"} type="password" name="password" value={formData.password} onChange={handleChange} required />
+                <CustomInput label={"PASSWORD"} type="password" name="password" value={formData.password} onChange={handleChange} required configs={{minLength:5}}/>
 
                 {userType === 'employee' && (
                     <>

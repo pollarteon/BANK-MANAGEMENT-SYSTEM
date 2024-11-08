@@ -28,15 +28,16 @@ const InputContainerStyle = styled.div`
     border: solid 1px;
 `
 
-export default function CustomInput({ type, label, onChange, value ,name,style}) {
+export default function CustomInput({ type, label, onChange, value ,name,style,configs,notRequired}) {
     var placeholder = 'ENTER '+label;
-    var configs={};
+    var configs={...configs,required:true};
+    if(notRequired) configs.required=false;
     if(name=='confirm_password'){
         placeholder="RE-ENTER PASSWORD"
     }
     if(name=='phone'){
         placeholder='91+----------'
-        configs={
+        configs={...configs,
             pattern:"[0-9]{10}",
             maxLength:10
         }
@@ -44,6 +45,7 @@ export default function CustomInput({ type, label, onChange, value ,name,style})
     if(name=='confirm_pin'){
         placeholder='RE-ENTER PIN'
         configs={
+            ...configs,
             pattern:"[0-9]{6}",
             maxLength:6
         }
@@ -51,6 +53,7 @@ export default function CustomInput({ type, label, onChange, value ,name,style})
     if(name=='pin'){
         placeholder="ENTER SECURITY PIN"
         configs={
+            ...configs,
             pattern:"[0-9]{6}",
             maxLength:6
         }
@@ -58,7 +61,7 @@ export default function CustomInput({ type, label, onChange, value ,name,style})
     return (
         <InputContainerStyle style={style}>
             <Label htmlFor={label}>{label} :</Label>
-            <InputStyle type={type} name={name} id={name} onChange={onChange} value={value} placeholder={placeholder} {...configs} required />
+            <InputStyle type={type} name={name} id={name} onChange={onChange} value={value} placeholder={placeholder} {...configs} />
         </InputContainerStyle>
     )
 

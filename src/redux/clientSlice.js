@@ -100,13 +100,15 @@ const clientSlice = createSlice({
                     ],
                     loans: [
                         {
-                            loanId: 'loan003',
+                            id: 'loan003',
                             amount: 200000,
                             interestRate: 7.2,
                             startDate: '2022-11-01',
                             endDate: '2027-11-01',
                             monthlyPayment: 3500,
                             status: 'Active',
+                            loanTerm:5,
+                            loanType:'auto',
                         },
                     ],
                 },
@@ -157,22 +159,26 @@ const clientSlice = createSlice({
                     ],
                     loans: [
                         {
-                            loanId: 'loan003',
+                            id: 'loan003',
                             amount: 200000,
                             interestRate: 7.2,
                             startDate: '2022-11-01',
                             endDate: '2027-11-01',
                             monthlyPayment: 3500,
                             status: 'Active',
+                            loanTerm:5,
+                            loanType:'education'
                         },
                         {
-                            loanId: 'loan002',
+                            id: 'loan002',
                             amount: 140000,
                             interestRate: 2.2,
                             startDate: '2022-10-23',
-                            endDate: '2027-12-05',
+                            endDate: '2025-10-23',
                             monthlyPayment: 5000,
                             status: 'Closed',
+                            loanTerm:3,
+                            loanType:'personal'
                         },
                     ],
                 }
@@ -204,10 +210,21 @@ const clientSlice = createSlice({
             const account_ID = action.payload.selectedAccount;
             if (account_ID == '') state.selectedAccount = null;
             else state.selectedAccount = action.payload.selectedAccount;
+        },
+        addTransaction(state,action){
+            const transaction = action.payload.transaction;
+            console.log(transaction);
+            const account = state.client.accounts.find((account)=>account.accountId===action.payload.accountId);
+            account.transactions.push(transaction);
+            account.balance-=transaction.amount;
+            console.log("added");
+            console.log(account.transactions);
+        },
+        addLoan(state,action){
 
         }
     }
 });
 
-export const { addAccount, deleteAccount, editContactInfo, setSelectedAccount } = clientSlice.actions;
+export const { addAccount, deleteAccount, editContactInfo, setSelectedAccount,addTransaction,addLoan } = clientSlice.actions;
 export default clientSlice.reducer;

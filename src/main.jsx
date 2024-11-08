@@ -15,7 +15,7 @@ import Details from './Components/Client/Details.jsx';
 import Accounts from './Components/Client/Accounts.jsx';
 import Loans from './Components/Client/Loans.jsx';
 import AccountDetails from './Components/Client/AccountsDetails.jsx';
-import UserForm from './Components/UI/UserDetails/UserForm/UserForm.jsx';
+import UserForm from './Components/Client/UserForm/UserForm.jsx';
 
 const router = createBrowserRouter([
   {
