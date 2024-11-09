@@ -117,7 +117,7 @@ const clientSlice = createSlice({
                     accountHolder: 'John Doe',
                     accountType: 'Current',
                     balance: 25000,
-                    interestRate: 4.5, // in percentage
+                    interestRate: 4.5, 
                     createdDate: '2023-01-01',
                     transactions: [ //later only the transaction ids will be stored
                         {
@@ -222,9 +222,12 @@ const clientSlice = createSlice({
         },
         addLoan(state,action){
 
+        },
+        resetAccountId(state,action){
+            state.selectedAccount=null;
         }
     }
 });
 
-export const { addAccount, deleteAccount, editContactInfo, setSelectedAccount,addTransaction,addLoan } = clientSlice.actions;
+export const { addAccount, deleteAccount, editContactInfo, setSelectedAccount,addTransaction,addLoan,resetAccountId } = clientSlice.actions;
 export default clientSlice.reducer;

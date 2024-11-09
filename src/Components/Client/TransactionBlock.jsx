@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import Label from "./Label"
+import Label from "../UI/Label"
 import { useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 
@@ -42,7 +42,7 @@ export default function TransactionBlock({ transaction }) {
             <TransactionIdStyle backgroundcolor={backgroundColor}>
                 Transaction_ID : {transaction.id}
             </TransactionIdStyle>
-            <div style={{ display: 'flex', cursor: 'pointer' }}>
+            <div style={{ display: 'flex'}}>
                 <Label label={'Amount'} value={transaction.amount} />
                 <Label label={"Status"} value={transaction.status} />
                 <Label label={'Date'} value={transaction.date} />
@@ -56,7 +56,7 @@ export default function TransactionBlock({ transaction }) {
                         exit="hidden"
                         variants={dropdownVariants}
                         transition={{ duration: 0.1 }}
-                        style={{ display: 'flex', cursor: 'pointer', overflow: 'hidden' }}
+                        style={{ display: 'flex', overflow: 'hidden' }}
                     >
                         {transaction.description.length > 0 && (
                             <Label label={'Description'} value={transaction.description} isdescription={true} />

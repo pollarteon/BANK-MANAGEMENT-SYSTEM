@@ -2,14 +2,13 @@ import styled from "styled-components"
 import { NavLink } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { logout } from "../../redux/authSlice"
-import { link } from "framer-motion/client"
 import { resetDashBoard } from "../../redux/appSlice"
+import { resetAccountId } from "../../redux/clientSlice"
 
 const NavlinkContainer = styled.div`
 
     font-weight:bold;
     font-family: sans-serif ;
-    
     cursor: pointer;
     padding: 1 0 1em 0;
     margin: 0 3em;
@@ -42,6 +41,7 @@ export default function Navlink({fontColor,linkTitle}){
     function handleLogout(){
         dispatch(logout());
         dispatch(resetDashBoard());
+        dispatch(resetAccountId());
     }
 
     if(linkTitle=="LOGIN/REGISTER"){

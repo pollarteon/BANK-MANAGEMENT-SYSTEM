@@ -16,6 +16,7 @@ import Accounts from './Components/Client/Accounts.jsx';
 import Loans from './Components/Client/Loans.jsx';
 import AccountDetails from './Components/Client/AccountsDetails.jsx';
 import UserForm from './Components/Client/UserForm/UserForm.jsx';
+import Clients from './Components/admin/Clients.jsx';
 
 const router = createBrowserRouter([
   {
@@ -30,14 +31,14 @@ const router = createBrowserRouter([
             <ClientPage />
           </ProtectedRoute>,
         children: [
-          { path: '', element: <Details /> },
+          { path: '', element: <Details userType={'client'} /> },
           {
             path: 'accounts', element:        
-            <AccountDetails/>
+            <AccountDetails userType={'client'}/>
           },
           {
             path: 'accounts/:accountId', element:  <Accounts/>, children: [
-              {path:'',element:<AccountDetails/>},
+              {path:'',element:<AccountDetails userType={'client'}/>},
               { path: 'transactions', element: <Transactions /> },
               {path:'transactions/new',element:<UserForm type={'transaction'}/>},
               { path: 'loans', element: <Loans /> },
@@ -50,7 +51,12 @@ const router = createBrowserRouter([
         path: 'employee/:employeeId', element:
           <ProtectedRoute>
             <EmployeePage />
-          </ProtectedRoute>
+          </ProtectedRoute>,
+        children:[
+          {path:'',element:<Details userType={'employee'}/>},
+          {path:'clients',element:<Clients/>},
+          {path:'clients/:clientId/accounts',element:<AccountDetails userType={'employee'}/>}
+        ]
       }
     ]
   }

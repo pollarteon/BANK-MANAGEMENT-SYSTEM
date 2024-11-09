@@ -85,7 +85,7 @@ export default function AuthPage() {
         if(userType=='client'){
             navigate('/client/c1');
         }else{
-            navigate('/employee');
+            navigate('/employee/e1');
         }
     };
 

@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import Label from "./Label"
+import Label from "../UI/Label"
 import { useState } from "react"
 
 
@@ -32,7 +32,6 @@ export default function AccountDetailBlock({ account }) {
                 <Label label={"Balance"} value={account.balance} />
             </div>
             <div style={{ display: 'flex' }}>
-                <Label label={'Balance'} value={account.balance} />
                 <Label label={'Interest_Rate'} value={account.interestRate} />
                 <Label label={'Created_Date'} value={account.createdDate} />
             </div>

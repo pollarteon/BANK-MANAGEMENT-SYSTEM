@@ -6,6 +6,7 @@ import Header from "../../UI/Header"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { addTransaction } from "../../../redux/clientSlice"
+import { useNavigate } from "react-router-dom"
 
 const FormContainerStyle = styled.div`
     display: flex;
@@ -25,7 +26,7 @@ export default function UserForm({ type }) {
     const account = client.accounts.find((account)=>account.accountId===selectedAccount);
     const balance = account.balance;
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
 
     const getCurrentDate = () => {
         const date = new Date();
@@ -58,9 +59,8 @@ export default function UserForm({ type }) {
         if(type==='transaction'){
             
             dispatch(addTransaction({transaction:formData,accountId:selectedAccount}));
+            navigate('../transactions');
         }
-      
-        console.log(formData);
     };
 
     return (
@@ -79,7 +79,7 @@ export default function UserForm({ type }) {
                 {type=='loan' && <div>
                     <SelectInput onChange={handleChange} label={'LOAN TYPE'} options={['personal','education','auto']} name={'loanType'}/>
                     <CustomInput onChange={handleChange} label={'LOAN AMOUNT'} type={'number'} name={'amount'} configs={{step:100,min:0}}/>  
-                    <CustomInput onChange={handleChange}  label={'LOAN TERM (in years)'} type={'number'} name={'loanTerm'} configs={{min:0}}/>   
+                    <CustomInput onChange={handleChange}  label={'LOAN TERM (in years)'} type={'number'} name={'loanTerm'} configs={{min:1}}/>   
                     <CustomInput onChange={handleChange} label={'LOAN PURPOSE'} name={'purpose'} configs={{}}/>
                     <Button type={'submit'} title={'APPLY LOAN'} color={'#8eff77ff'} />
                 </div>}

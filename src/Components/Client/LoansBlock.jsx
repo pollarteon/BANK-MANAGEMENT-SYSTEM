@@ -1,7 +1,7 @@
 import styled from "styled-components"
-import Label from "./Label"
+import Label from "../UI/Label"
 import { useState } from "react"
-
+import { AnimatePresence, motion } from "framer-motion"
 
 const LoansBlockContainer = styled.div`
     margin: 1em ;
@@ -20,6 +20,9 @@ const LoansIdStyle = styled.div`
     padding: 0.25em;
 `
 
+
+
+
 export default function LoansBlock({ loan }) {
 
     const [showDropDown, setShowDropdown] = useState(false);
@@ -29,11 +32,12 @@ export default function LoansBlock({ loan }) {
     }
     let backgroundColor;
     if (loan.status == 'Active') {
-        backgroundColor = '#ffba79';
+        backgroundColor = '#73ff51'
+        ;
     } else if (loan.status == 'Closed') {
         backgroundColor = '#ff8d8d'
     } else {
-        backgroundColor = '#73ff51'
+        backgroundColor = '#ffba79'
     }
 
     // loanId: 'loan003',
@@ -43,6 +47,11 @@ export default function LoansBlock({ loan }) {
     // endDate: '2027-11-01',
     // monthlyPayment: 3500,
     // status: 'Active',
+    const dropdownVariants = {
+        hidden: { opacity: 0, height: 0 },
+        visible: { opacity: 1, height: 'auto' },
+    };
+
 
     return (
         <LoansBlockContainer onClick={toggleDropdown}>
@@ -53,15 +62,20 @@ export default function LoansBlock({ loan }) {
                 <Label label={"Loan Term"} value={loan.loanTerm} />
                 <Label label={'Type'} value={loan.loanType.toUpperCase()} />
             </div>
-            {showDropDown && <>
-            <div style={{ display: 'flex', cursor: 'pointer' }}>
-                <Label label={'Interest_Rate'} value={loan.interestRate} />
-                <Label label={'Monthly_Payment'} value={loan.monthlyPayment} />
-            </div>
-            <div style={{ display: 'flex', cursor: 'pointer' }}>
-                <Label label={"Start-Date"} value={loan.startDate} />
-                <Label label={'End-Date'} value={loan.endDate} />
-            </div></>}
+            <AnimatePresence>
+                {showDropDown && <motion.div initial="hidden" animate="visible" exit={"hidden"} variants={dropdownVariants} transition={{ duration: 0.1 }}>
+                    <div style={{ display: 'flex', cursor: 'pointer' }}>
+                        <Label label={'Interest_Rate'} value={loan.interestRate} />
+                        <Label label={'Monthly_Payment'} value={loan.monthlyPayment} />
+                    </div>
+                    <div style={{ display: 'flex', cursor: 'pointer' }}>
+                        <Label label={"Start-Date"} value={loan.startDate} />
+                        <Label label={'End-Date'} value={loan.endDate} />
+                    </div>
+                </motion.div>
+                }
+            </AnimatePresence>
+
 
         </LoansBlockContainer>
     )
