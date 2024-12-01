@@ -54,7 +54,7 @@ export default function RegisterForm({ setFormData, handleSubmit,formData, userT
                 ...(userType === "client" && { pin: formData.pin }),
             });
 
-            // Step 3: Redirect to the dashboard or login page
+       
             alert("User registered and logged in successfully!");
 
             if (handleSubmit){

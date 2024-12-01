@@ -191,10 +191,6 @@ const clientSlice = createSlice({
         selectedAccount: null,
     },
     reducers: {
-        addAccount(state, action) {
-            state.accountId.push(action.payload.accountId);
-            state.branchId = action.payload.branchId;
-        },
         deleteAccount(state, action) {
             state.accountId = null;
             state.branchId = null;
@@ -225,7 +221,14 @@ const clientSlice = createSlice({
         },
         resetAccountId(state,action){
             state.selectedAccount=null;
-        }
+        },
+        addAccount(state,action){
+            const account = action.payload.account;
+            console.log(account);
+            const accounts = state.client.accounts;
+            accounts.push(account);
+            console.log("Account added..");
+        },
     }
 });
 

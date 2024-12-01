@@ -46,7 +46,8 @@ export default function Dashboard({ userType }) {
             { link: `accounts/${selectedAccount}/transactions`, title: 'Transactions' },
             { link: `accounts/${selectedAccount}/loans`, title: 'Loans' },
             { link: `accounts/${selectedAccount}/transactions/new`, title: 'Make Transaction' },
-            { link: `accounts/${selectedAccount}/loans/new`, title: 'Apply Loan' }
+            { link: `accounts/${selectedAccount}/loans/new`, title: 'Apply Loan' },
+            { link: `accounts/${selectedAccount}/accounts/new`, title: 'Add A New Account' }
             ]
         }
     }

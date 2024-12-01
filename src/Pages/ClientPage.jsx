@@ -4,6 +4,7 @@ import { Outlet, useLocation } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { AnimatePresence } from "framer-motion"
 import { motion } from "framer-motion"
+
 const PageContainer = styled.div`
     margin-top:70px;
     display: flex;

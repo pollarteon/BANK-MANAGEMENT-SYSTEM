@@ -58,9 +58,7 @@ export default function LoginForm({ setFormData, handleSubmit, formData, userTyp
                     return;
                 }
             }
-    
             // Step 5: Call handleSubmit
-            alert("Login successful!");
             if(handleSubmit){
                 handleSubmit(e);
             }

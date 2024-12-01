@@ -42,7 +42,8 @@ const router = createBrowserRouter([
               { path: 'transactions', element: <Transactions /> },
               {path:'transactions/new',element:<UserForm type={'transaction'}/>},
               { path: 'loans', element: <Loans /> },
-              {path:'loans/new',element:<UserForm type={'loan'}/>}
+              {path:'loans/new',element:<UserForm type={'loan'}/>},
+              {path:'accounts/new',element:<UserForm type={'account'}/>}
             ]
           }
         ]
