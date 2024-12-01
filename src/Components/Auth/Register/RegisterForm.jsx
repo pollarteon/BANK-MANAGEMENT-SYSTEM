@@ -8,7 +8,6 @@ import { db } from "../../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebase";
 import CustomTextArea from "../../UI/CustomTextArea";
-import { address } from "framer-motion/client";
 
 
 const LoginFormStyle = styled.div`
