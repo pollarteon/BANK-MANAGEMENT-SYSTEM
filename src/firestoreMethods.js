@@ -1,7 +1,6 @@
-import { collection, addDoc ,query,where} from "firebase/firestore";
+import { collection, addDoc ,query,where , getDocs, getDoc, doc, updateDoc} from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth } from "firebase/auth"
-import { getDocs, doc } from "firebase/firestore";
 
 //fetch the client data of the current user
 export const fetchClient = async()=>{
@@ -336,5 +335,121 @@ export const fetchtransactionsByAccountId = async (accountId) => {
     } catch (error) {
         console.error("Error fetching transactions for account ID:", error);
         throw new Error("Failed to fetch transactions. Please try again.");
+    }
+};
+
+
+//for updating the balance amount when some amount is deposited
+export const depositMoneyToAccount = async (accountId, depositAmount) => {
+    try {
+        // Reference to the account document
+        const accountDocRef = doc(db, "accounts", accountId);
+
+        // Fetch the current account data
+        const accountSnapshot = await getDoc(accountDocRef);
+
+        if (!accountSnapshot.exists()) {
+            console.error("Account not found");
+            throw new Error("Account not found. Please provide a valid account ID.");
+        }
+
+        const accountData = accountSnapshot.data();
+
+        // Calculate the new balance
+        const newBalance = accountData.balance + depositAmount;
+
+        // Update the account's balance in Firestore
+        await updateDoc(accountDocRef, { balance: newBalance });
+
+        console.log(`Successfully deposited ${depositAmount} to account ${accountId}. New balance: ${newBalance}`);
+
+        // Log the deposit as a transaction
+        const transactionData = {
+            accountId,
+            amount: depositAmount,
+            branch: accountData.branch,
+            uid: accountData.uid, 
+            date: getCurrentDate(),
+            description: "Deposit",
+            recipient: "self",
+            status: "Completed",
+            type: "Credit",
+        };
+
+        const transactionsCollectionRef = collection(db, "transactions");
+        const transactionDocRef = await addDoc(transactionsCollectionRef, transactionData);
+
+        console.log("Transaction logged successfully with ID:", transactionDocRef.id);
+
+        return {
+            success: true,
+            message: `Deposit successful. New balance: ${newBalance}`,
+            transactionId: transactionDocRef.id,
+        };
+
+    } catch (error) {
+        console.error("Error depositing money:", error);
+        throw new Error("Failed to deposit money. Please try again.");
+    }
+};
+
+
+//for updating the balance amount when some amount is withdrawn
+export const withdrawMoneyFromAccount = async (accountId, withdrawalAmount) => {
+    try {
+        // Reference to the account document
+        const accountDocRef = doc(db, "accounts", accountId);
+
+        // Fetch the current account data
+        const accountSnapshot = await getDoc(accountDocRef);
+
+        if (!accountSnapshot.exists()) {
+            console.error("Account not found");
+            throw new Error("Account not found. Please provide a valid account ID.");
+        }
+
+        const accountData = accountSnapshot.data();
+
+        // Check if withdrawal is possible
+        if (withdrawalAmount > accountData.balance) {
+            console.error("Insufficient balance for withdrawal.");
+            throw new Error("Insufficient balance. Please enter a valid amount.");
+        }
+
+        // Calculate the new balance
+        const newBalance = accountData.balance - withdrawalAmount;
+
+        // Update the account's balance in Firestore
+        await updateDoc(accountDocRef, { balance: newBalance });
+
+        console.log(`Successfully withdrew ${withdrawalAmount} from account ${accountId}. New balance: ${newBalance}`);
+
+        // Log the withdrawal as a transaction
+        const transactionData = {
+            accountId,
+            amount: withdrawalAmount,
+            branch: accountData.branch,
+            uid: accountData.uid, // Assuming the account has a uid field for the user
+            date: getCurrentDate(),
+            description: "Withdrawal",
+            recipient: "self",
+            status: "Completed",
+            type: "Debit",
+        };
+
+        const transactionsCollectionRef = collection(db, "transactions");
+        const transactionDocRef = await addDoc(transactionsCollectionRef, transactionData);
+
+        console.log("Transaction logged successfully with ID:", transactionDocRef.id);
+
+        return {
+            success: true,
+            message: `Withdrawal successful. New balance: ${newBalance}`,
+            transactionId: transactionDocRef.id,
+        };
+
+    } catch (error) {
+        console.error("Error withdrawing money:", error);
+        throw new Error("Failed to withdraw money. Please try again.");
     }
 };
