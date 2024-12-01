@@ -7,6 +7,8 @@ import { collection , addDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebase";
+import CustomTextArea from "../../UI/CustomTextArea";
+import { address } from "framer-motion/client";
 
 
 const LoginFormStyle = styled.div`
@@ -44,10 +46,16 @@ export default function RegisterForm({ setFormData, handleSubmit,formData, userT
             // Step 2: Add additional details to Firestore
             await addDoc(collection(db, collectionName), {
                 uid: user.uid, // Link Firestore entry with the Firebase auth user
-                firstName: formData.first_name,
-                lastName: formData.last_name,
-                email: formData.email,
-                phone: formData.phone,
+                personalInfo:{
+                    firstName: formData.first_name,
+                    lastName: formData.last_name,
+                    DOB:formData.DOB,
+                },
+                contactInfo:{
+                    email: formData.email,
+                    phone: formData.phone,
+                    address:formData.address
+                },
                 userType,
                 branch: formData.branch,
                 ...(userType === "employee" && { employeeId: formData.employeeId, position: formData.position }),
@@ -77,6 +85,8 @@ export default function RegisterForm({ setFormData, handleSubmit,formData, userT
                     <CustomInput style={{ flex: 1 }} label={"FIRST NAME"} type="text" name="first_name" value={formData.first_name} onChange={handleChange} required />
                     <CustomInput style={{ flex: 1 }} label={"LAST NAME"} type="text" name="last_name" value={formData.last_name} onChange={handleChange} required />
                 </div>
+                <CustomInput label={'DATE OF BIRTH'} type={'date'} name={'DOB'} value={formData.DOB} onChange={handleChange} required/>
+                <CustomTextArea label={'ADDRESS'} name={'address'} value={formData.address} onChange={handleChange} required/>
                 {userType === 'employee' && (
                     <>
                         <CustomInput label={"EMPLOYEE-ID"} type="text" name="employeeId" value={formData.employeeId} onChange={handleChange} required />
@@ -84,6 +94,8 @@ export default function RegisterForm({ setFormData, handleSubmit,formData, userT
                 )}
                 <CustomInput label={"E-MAIL"} type="email" name="email" value={formData.email} onChange={handleChange} required />
                 <CustomInput label={'PHONE NUMBER:'} type={"tel"} name={'phone'} value={formData.phone} onChange={handleChange} required />
+
+                
 
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <CustomInput style={{ flex: 1 }} label={"PASSWORD"} type="password" name="password" value={formData.password} onChange={handleChange} required />

@@ -7,6 +7,8 @@ import { query, where ,collection , getDocs } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { signInWithEmailAndPassword} from "firebase/auth";
 import { auth } from "../../../firebase";
+import { setAuthToken } from "../../../redux/authSlice";
+import { useDispatch } from "react-redux";
 
 const LoginFormStyle = styled.div`
     overflow: hidden;
@@ -19,6 +21,7 @@ const LoginFormStyle = styled.div`
 
 export default function LoginForm({ setFormData, handleSubmit, formData, userType }) {
 
+    const dispatch = useDispatch();
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -30,6 +33,10 @@ export default function LoginForm({ setFormData, handleSubmit, formData, userTyp
             // Step 1: Authenticate the user with Firebase Auth
             const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
             const user = userCredential.user;
+
+            const idToken = await user.getIdToken(); // Retrieve the ID token
+           // console.log("Session Token (ID Token):", idToken);
+
     
             // Step 2: Define the collection based on userType
             const collectionName = userType === "employee" ? "employees" : "clients";
@@ -43,7 +50,8 @@ export default function LoginForm({ setFormData, handleSubmit, formData, userTyp
                 alert("No matching user found in Firestore.");
                 return;
             }
-    
+
+            
             const userData = querySnapshot.docs[0].data(); // Assuming only one matching document
     
             // Step 4: Validate additional fields
@@ -58,8 +66,10 @@ export default function LoginForm({ setFormData, handleSubmit, formData, userTyp
                     return;
                 }
             }
-            // Step 5: Call handleSubmit
+            // Step 5: Call handleSubmit 
             if(handleSubmit){
+                localStorage.setItem("authToken",idToken);
+                dispatch(setAuthToken(idToken))
                 handleSubmit(e);
             }
         } catch (error) {

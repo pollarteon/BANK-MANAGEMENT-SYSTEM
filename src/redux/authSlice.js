@@ -5,13 +5,15 @@ const authSlice = createSlice({
     initialState:{
         isLoggedin:false,
         userType:null,
-        userId:null
+        userId:null,
+        authToken:null,
     },
     reducers:{
         login(state,action){
             //handle Login in firebase
             state.isLoggedin = true;
             state.userType = action.payload.userType;
+
             
         },
         logout(state,action){
@@ -19,11 +21,14 @@ const authSlice = createSlice({
             state.isLoggedin=false;
             state.userType = null;
             // console.log("LoggedOut"); works
-        }
+        },
+        setAuthToken(state,action){
+            state.authToken = action.payload;
+        },
     }
 })
 
-export const {logout,login} = authSlice.actions
+export const {logout,login,setAuthToken} = authSlice.actions
 export default authSlice.reducer
 
 

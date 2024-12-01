@@ -11,7 +11,7 @@ const clientSlice = createSlice({
                 DOB: '12-01-2004',
             },
             contactInfo: {
-                phoneNo: '+91-9876543210',
+                phone: '+91-9876543210',
                 email: 'johndoe@gmail.com',
                 address: '123 Main St, New Delhi, India'
             },

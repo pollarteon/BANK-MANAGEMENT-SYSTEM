@@ -28,7 +28,6 @@ const FormContainer = styled.div`
 
 const PageStyle = styled.div`
     background:#4b5bbb;
-    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -78,8 +77,7 @@ export default function AuthPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
-      
+        console.log(formData)
         if(formType=='register' && formData.password!==formData.confirm_password){
             console.log("invalid")
             setformValidity({

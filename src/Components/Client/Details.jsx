@@ -27,14 +27,11 @@ export default function Details({userType}) {
     ]
     
     const contactInfoArray =[
-        {label:'Phone-no',value:contactInfo.phoneNo},
+        {label:'Phone-no',value:contactInfo.phone},
         {label:'E-mail',value:contactInfo.email},
         {label:'Address',value:contactInfo.address},
     ]
-    const activityLogsArray = [
-        {label:'User-Creation',value:creationTime},
-        {label:'Last-Login',value:lastLogin},
-    ]
+   
     var employeeDetailsArray; 
     if(userType=='employee'){
         employeeDetailsArray=[
@@ -48,7 +45,7 @@ export default function Details({userType}) {
             <UserDetailBlock datas={personalInfoArray} title={'PERSONAL DETAILS'} />
             <UserDetailBlock datas={contactInfoArray} title={'CONTACT INFO'} />
             {userType==='employee' && <UserDetailBlock datas={employeeDetailsArray} title={'EMPLOYEE INFO'}/>}
-            <UserDetailBlock datas={activityLogsArray} title={'ACCOUNT LOGS'} />
+           
 
         </>
     )

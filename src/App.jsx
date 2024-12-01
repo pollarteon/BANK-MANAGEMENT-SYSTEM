@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import NavBar from './Components/UI/NavBar';
@@ -30,7 +30,11 @@ function AnimatedRoutes() {
   );
 }
 
+
+
 export default function App() {
+
+ 
 
   return (
     <>

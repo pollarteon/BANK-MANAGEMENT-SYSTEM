@@ -3,7 +3,7 @@ import CustomInput from "../../UI/CustomInput"
 import SelectInput from "../../UI/SelectInput"
 import Button from "../../UI/Button"
 import Header from "../../UI/Header"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { addAccount, addTransaction } from "../../../redux/clientSlice"
 import { useNavigate } from "react-router-dom"
@@ -28,6 +28,10 @@ export default function UserForm({ type }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        // Perform any additional actions with the latest formData here
+    }, [formData]);
+
     const getCurrentDate = () => {
         const date = new Date();
         const year = date.getFullYear();
@@ -43,7 +47,6 @@ export default function UserForm({ type }) {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
-        console.log(formData)
         if (type == 'loan' && e.target.name == 'loanTerm') {
             setFormData((prev) => { return { ...prev, startDate: getCurrentDate(), lastDate: addYearsToDate(parseInt(prev.loanTerm, 10)) } });
         }
@@ -51,11 +54,11 @@ export default function UserForm({ type }) {
             setFormData((prev) => { return { ...prev, date: getCurrentDate(), id: 'added123', status: 'Completed' } });
         }
         if (type == 'account') {
+            let interestRate =0;
+            if(formData && formData.accountType==='Savings'){
+                    interestRate =  2.5 
+            }
             setFormData((prev) => {
-                let interestRate =0;
-                if(formData && formData.accountType==='Savings'){
-                      interestRate =  2.5 
-                }
                 return { ...prev, accountId: 'testadd1', accountHolder: `${client.personalInfo.firstName} ${client.personalInfo.lastName}`,balance:0,interestRate:interestRate,transactions:[],loans:[],createdDate:getCurrentDate() }
             })
         }
