@@ -1,9 +1,12 @@
 import styled from "styled-components"
 import Dashboard from "../Components/UI/UserDetails/DashBoard/Dashboard"
 import { Outlet, useLocation } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { AnimatePresence } from "framer-motion"
 import { motion } from "framer-motion"
+import { useEffect } from "react"
+import { fetchClientsByBranch, fetchEmployee } from "../firestoreMethods"
+import { setClients, setEmployee } from "../redux/employeeSlice"
 const PageContainer = styled.div`
     margin-top:70px;
     display: flex;
@@ -23,6 +26,20 @@ export default function EmployeePage() {
     const userType = useSelector(state => state.auth.userType);
     const location = useLocation();
     const animationkey = location.pathname
+   
+    const dispatch = useDispatch()
+
+    useEffect(()=>{
+        const fetchData = async()=>{
+            const employee = await fetchEmployee();
+            const clients = await fetchClientsByBranch(employee.branch)
+            dispatch(setEmployee(employee));
+            dispatch(setClients(clients))
+        } 
+        fetchData();
+    },[dispatch])
+
+
     return (
         <PageContainer>
             <AnimatePresence>

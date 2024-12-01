@@ -40,7 +40,7 @@ export default function TransactionBlock({ transaction }) {
     return (
         <TransactionBlockContainer onClick={toggleDropdown}>
             <TransactionIdStyle backgroundcolor={backgroundColor}>
-                Transaction_ID : {transaction.id}
+                Transaction_ID : {transaction.transactionId}
             </TransactionIdStyle>
             <div style={{ display: 'flex'}}>
                 <Label label={'Amount'} value={transaction.amount} />

@@ -37,13 +37,17 @@ const router = createBrowserRouter([
             <AccountDetails userType={'client'}/>
           },
           {
+            path:'accounts/new',element:
+            <UserForm type={'account'}/>
+          },
+          {
             path: 'accounts/:accountId', element:  <Accounts/>, children: [
               {path:'',element:<AccountDetails userType={'client'}/>},
               { path: 'transactions', element: <Transactions /> },
               {path:'transactions/new',element:<UserForm type={'transaction'}/>},
               { path: 'loans', element: <Loans /> },
               {path:'loans/new',element:<UserForm type={'loan'}/>},
-              {path:'new',element:<UserForm type={'account'}/>}
+              
             ]
           }
         ]

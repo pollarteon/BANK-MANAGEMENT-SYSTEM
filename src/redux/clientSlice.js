@@ -228,7 +228,6 @@ const clientSlice = createSlice({
         },
         addAccount(state,action){
             const account = action.payload.account;
-            console.log(account);
             const accounts = state.client.accounts;
             accounts.push(account);
             console.log("Account added..");
@@ -236,9 +235,23 @@ const clientSlice = createSlice({
         setClient(state,action){
             const client = action.payload;
             state.client = client;
-        }
+        },
+        setAccounts(state,action){
+            const accounts = action.payload;
+            state.client.accounts = accounts;
+        },
+        setTransactions(state,action){
+            const transactions = action.payload.transactions;
+            const account = state.client.accounts.find((account)=>account.accountId===action.payload.accountId);
+            account.transactions=transactions
+        },
+        setLoans(state,action){
+            const loans = action.payload.loans;
+            const account = state.client.accounts.find((account)=>account.accountId===action.payload.accountId);
+            account.loans=loans
+        },
     }
 });
 
-export const { addAccount, deleteAccount, editContactInfo, setSelectedAccount,addTransaction,addLoan,resetAccountId ,setClient} = clientSlice.actions;
+export const { addAccount, deleteAccount, editContactInfo, setSelectedAccount,addTransaction,addLoan,resetAccountId ,setClient,setAccounts,setTransactions,setLoans} = clientSlice.actions;
 export default clientSlice.reducer;

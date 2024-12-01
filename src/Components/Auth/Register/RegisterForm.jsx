@@ -58,7 +58,7 @@ export default function RegisterForm({ setFormData, handleSubmit,formData, userT
                 userType,
                 accounts:[],
                 branch: formData.branch,
-                ...(userType === "employee" && { employeeId: formData.employeeId, position: formData.position }),
+                ...(userType === "employee" && {employeeDetails: {employeeId: formData.employeeId, position: formData.position} }),
                 ...(userType === "client" && { pin: formData.pin }),
             });
 

@@ -3,7 +3,9 @@ import DashboardTab from "./DashboardTab";
 import styled from "styled-components";
 import SelectInput from "../../SelectInput";
 import { useNavigate } from "react-router-dom";
-import { setSelectedAccount } from "../../../../redux/clientSlice";
+import { setLoans, setSelectedAccount, setTransactions } from "../../../../redux/clientSlice";
+import { useEffect } from "react";
+import { fetchLoansByAccountId, fetchtransactionsByAccountId } from "../../../../firestoreMethods";
 
 const DashboradContainer = styled.div`
     border-right: solid 1px;
@@ -24,6 +26,22 @@ export default function Dashboard({ userType }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+
+    useEffect(()=>{
+        const fetchData = async()=>{
+            if(selectedAccount){
+                const loans =await fetchLoansByAccountId(selectedAccount);
+                const transactions =await fetchtransactionsByAccountId(selectedAccount);
+                console.log(transactions)
+                console.log(loans);
+                dispatch(setTransactions({transactions:transactions,accountId:selectedAccount}));
+                dispatch(setLoans({loans:loans,accountId:selectedAccount}))
+            }else{
+            }
+        }
+        fetchData()
+    },[dispatch,selectedAccount])
+
     function handleAccountChange(event) {
         const selectedAccountId = event.target.value;
         if (selectedAccountId.length != 0) {
@@ -39,7 +57,7 @@ export default function Dashboard({ userType }) {
     if (userType === 'client') {
         dashboardTabs = [
             { link: ``, title: 'User Details' },
-            { link: `accounts/accounts/new`, title: 'Add A New Account' }
+            { link: `accounts/new`, title: 'Add A New Account' }
         ]
         if (selectedAccount != null) {
             dashboardTabs = [...dashboardTabs,

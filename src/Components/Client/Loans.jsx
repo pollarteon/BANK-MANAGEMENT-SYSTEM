@@ -1,7 +1,10 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import LoansBlock from "./LoansBlock";
 import styled from "styled-components";
 import Header from "../UI/Header";
+import { useEffect } from "react";
+
+
 const LoansStyle = styled.div`
     overflow-y: scroll;
     height: 90vh;
@@ -15,6 +18,9 @@ export default function Loans(){
     const accounts = client.accounts
     const account = accounts.find(acc => acc.accountId === selectedAccount);
     const loans = account.loans;
+    
+    
+
     // console.log(loans)
     return (
         <LoansStyle>

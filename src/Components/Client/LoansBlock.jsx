@@ -57,7 +57,7 @@ export default function LoansBlock({ loan }) {
         <LoansBlockContainer onClick={toggleDropdown}>
             <LoansIdStyle backgroundcolor={backgroundColor}>loan_ID : {loan.loanId}</LoansIdStyle>
             <div style={{ display: 'flex', cursor: 'pointer' }}>
-                <Label label={'Amount'} value={loan.amount} />
+                <Label label={'Amount'} value={loan.loanAmount} />
                 <Label label={"Status"} value={loan.status} />
                 <Label label={"Loan Term"} value={loan.loanTerm} />
                 <Label label={'Type'} value={loan.loanType.toUpperCase()} />

@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { AnimatePresence } from "framer-motion"
 import { motion } from "framer-motion"
 import { useEffect } from "react"
-import { fetchClient } from "../firestoreMethods"
-import { setClient } from "../redux/clientSlice"
+import { fetchAccountsByUID, fetchClient, fetchLoansByAccountId, fetchtransactionsByAccountId } from "../firestoreMethods"
+import { setAccounts, setClient } from "../redux/clientSlice"
 
 const PageContainer = styled.div`
     margin-top:70px;
@@ -25,7 +25,8 @@ const clientPageVariants = {
 export default function ClientPage() {
     const dashboard = useSelector(state => state.app.dashboard);
     const userType = useSelector(state => state.auth.userType);
-    const client = useSelector(state=>state.client.client);
+    const client = useSelector(state=>state.client.client)
+    
     const location = useLocation();
     const dispatch = useDispatch();
     const animationkey = location.pathname
@@ -35,7 +36,11 @@ export default function ClientPage() {
     useEffect(()=>{
         const fetchData = async()=>{
             const client = await fetchClient();
+            const accounts = await fetchAccountsByUID();
+            
             dispatch(setClient(client))
+            dispatch(setAccounts(accounts));
+            
         } 
         fetchData();
     },[dispatch])

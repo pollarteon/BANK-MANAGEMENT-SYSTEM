@@ -24,7 +24,7 @@ const ClientIdStyle = styled.div`
 
 export default function ClientBlock({client,onClick}){
 
-
+    console.log(client)
 
     return (
         <ClientBlockContainer onClick={()=>onClick(client.clientId)}>
@@ -36,10 +36,10 @@ export default function ClientBlock({client,onClick}){
             </div>
             <div style={{display:'flex'}}>
                 <Label label={"E-mail"} value={client.contactInfo.email}/>
-                <Label label={"Phone-no"} value={client.contactInfo.phoneNo}/>
+                <Label label={"Phone-no"} value={client.contactInfo.phone}/>
             </div>
             <div style={{display:'flex'}}>
-                <Label label={"Number of Accounts"} value={client.accounts.length}/>
+                <Label label={"ADDRESS"} value={client.contactInfo.address}/>
             </div>
         </ClientBlockContainer>
     )

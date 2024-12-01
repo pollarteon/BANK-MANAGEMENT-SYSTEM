@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 export default function Details({userType}) {
     const client = useSelector(state=>state.client.client);
-    const employee = useSelector(state=>state.employee);
+    const employee = useSelector(state=>state.employee.employee);
     var personalInfo,contactInfo,creationTime,lastLogin,employeeDetails;
     if(userType=='client'){
         personalInfo = client.personalInfo;
