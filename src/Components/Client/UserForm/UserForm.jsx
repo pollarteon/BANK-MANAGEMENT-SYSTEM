@@ -148,6 +148,11 @@ export default function UserForm({ type }) {
             navigate('../loans');
             return;
         }
+        if(type==='transaction'){
+            dispatch(addTransaction({transaction:formData,accountId:selectedAccount}));
+            navigate('../transactions');
+            return;
+        }
         if (!currentUser) {
             console.error("No authenticated user found");
             alert("Please log in again.");
