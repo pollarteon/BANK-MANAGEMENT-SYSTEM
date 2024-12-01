@@ -39,6 +39,7 @@ export default function Dashboard({ userType }) {
     if (userType === 'client') {
         dashboardTabs = [
             { link: ``, title: 'User Details' },
+            { link: `accounts/accounts/new`, title: 'Add A New Account' }
         ]
         if (selectedAccount != null) {
             dashboardTabs = [...dashboardTabs,
@@ -47,7 +48,7 @@ export default function Dashboard({ userType }) {
             { link: `accounts/${selectedAccount}/loans`, title: 'Loans' },
             { link: `accounts/${selectedAccount}/transactions/new`, title: 'Make Transaction' },
             { link: `accounts/${selectedAccount}/loans/new`, title: 'Apply Loan' },
-            { link: `accounts/${selectedAccount}/accounts/new`, title: 'Add A New Account' }
+
             ]
         }
     }

@@ -1,9 +1,12 @@
 import styled from "styled-components"
 import Dashboard from "../Components/UI/UserDetails/DashBoard/Dashboard"
 import { Outlet, useLocation } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { AnimatePresence } from "framer-motion"
 import { motion } from "framer-motion"
+import { useEffect } from "react"
+import { fetchClient } from "../firestoreMethods"
+import { setClient } from "../redux/clientSlice"
 
 const PageContainer = styled.div`
     margin-top:70px;
@@ -22,8 +25,23 @@ const clientPageVariants = {
 export default function ClientPage() {
     const dashboard = useSelector(state => state.app.dashboard);
     const userType = useSelector(state => state.auth.userType);
+    const client = useSelector(state=>state.client.client);
     const location = useLocation();
+    const dispatch = useDispatch();
     const animationkey = location.pathname
+
+    // console.log(client);
+
+    useEffect(()=>{
+        const fetchData = async()=>{
+            const client = await fetchClient();
+            dispatch(setClient(client))
+        } 
+        fetchData();
+    },[dispatch])
+
+    
+
     return (
         <PageContainer>
             <AnimatePresence>

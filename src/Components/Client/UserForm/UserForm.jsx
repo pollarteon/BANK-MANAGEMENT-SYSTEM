@@ -5,7 +5,7 @@ import Button from "../../UI/Button"
 import Header from "../../UI/Header"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { addAccount, addTransaction } from "../../../redux/clientSlice"
+import { addAccount, addTransaction,addLoan } from "../../../redux/clientSlice"
 import { useNavigate } from "react-router-dom"
 
 
@@ -32,8 +32,6 @@ export default function UserForm({ type }) {
     const [formData, setFormData] = useState();
     const client = useSelector(state => state.client.client);
     const selectedAccount = useSelector(state => state.client.selectedAccount);
-    const account = client.accounts.find((account) => account.accountId === selectedAccount);
-    const balance = account.balance;
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -57,7 +55,8 @@ export default function UserForm({ type }) {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
         if (type == 'loan' && e.target.name == 'loanTerm') {
-            setFormData((prev) => { return { ...prev, startDate: getCurrentDate(), lastDate: addYearsToDate(parseInt(prev.loanTerm, 10)) } });
+            setFormData((prev) => { return { ...prev, startDate: getCurrentDate(), endDate: addYearsToDate(parseInt(prev.loanTerm, 10)),status:"Pending",loanId:'newlyAdded' } });
+            console.log(formData);
         }
         if (type == 'transaction') {
             setFormData((prev) => { return { ...prev, date: getCurrentDate(), id: 'added123', status: 'Completed' } });
@@ -71,6 +70,7 @@ export default function UserForm({ type }) {
                 return { ...prev, accountId: 'testadd1', accountHolder: `${client.personalInfo.firstName} ${client.personalInfo.lastName}`,balance:0,interestRate:interestRate,transactions:[],loans:[],createdDate:getCurrentDate() }
             })
         }
+        
     }
 
 
@@ -142,7 +142,12 @@ export default function UserForm({ type }) {
     
         const auth = getAuth();
         const currentUser = auth.currentUser;
-    
+        console.log(currentUser);
+        if(type==='loan'){
+            dispatch(addLoan({loan:formData,accountId:selectedAccount}))
+            navigate('../loans');
+            return;
+        }
         if (!currentUser) {
             console.error("No authenticated user found");
             alert("Please log in again.");
@@ -150,7 +155,7 @@ export default function UserForm({ type }) {
         }
     
         const uid = currentUser.uid; // Firebase Auth UID
-    
+        
         try {
             // Step 1: Fetch client data from Firestore
             const userCollectionRef = collection(db, "clients");
@@ -174,7 +179,7 @@ export default function UserForm({ type }) {
             const accountData = {
                 ...formData,
                 uid, // Link account to the authenticated user
-                accountHolder: `${clientData.firstName} ${clientData.lastName}`,
+                accountHolder: `${clientData.personalInfo.firstName} ${clientData.personalInfo.lastName}`,
                 branch: clientData.branch,
                 balance: 0,
                 transactions: [],

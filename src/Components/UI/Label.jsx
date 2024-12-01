@@ -10,11 +10,12 @@ const DetailStyle=styled.div`
     margin: 0.5em;
 `
 
-export default function Label({label,value,isdescription}){
+export default function Label({label,value,isdescription,isInvalid}){
+    
     return (
        <LabelStyle style={isdescription ? {flex:2}:{flex:1}}>
             <div style={{margin:'0.5em',fontWeight:'bolder'}}>{label} : </div>
-            <div style={{margin:'0.5em'}}>{value}</div>
+            <div style={{margin:'0.5em',color:isInvalid?'red':'black'}}>{value}</div>
        </LabelStyle> 
     )
 }

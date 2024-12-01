@@ -65,8 +65,8 @@ export default function LoansBlock({ loan }) {
             <AnimatePresence>
                 {showDropDown && <motion.div initial="hidden" animate="visible" exit={"hidden"} variants={dropdownVariants} transition={{ duration: 0.1 }}>
                     <div style={{ display: 'flex', cursor: 'pointer' }}>
-                        <Label label={'Interest_Rate'} value={loan.interestRate} />
-                        <Label label={'Monthly_Payment'} value={loan.monthlyPayment} />
+                        <Label label={'Interest_Rate'} value={loan.interestRate ? loan.interestRate:'WAITING'} isInvalid={!loan.interestRate && true}/>
+                        <Label label={'Monthly_Payment'} value={loan.monthlyPayment? loan.monthlyPayment:'WAITING'} isInvalid={!loan.monthlyPayment && true}/>
                     </div>
                     <div style={{ display: 'flex', cursor: 'pointer' }}>
                         <Label label={"Start-Date"} value={loan.startDate} />

@@ -100,7 +100,7 @@ const clientSlice = createSlice({
                     ],
                     loans: [
                         {
-                            id: 'loan003',
+                            loanId: 'loan003',
                             amount: 200000,
                             interestRate: 7.2,
                             startDate: '2022-11-01',
@@ -159,7 +159,7 @@ const clientSlice = createSlice({
                     ],
                     loans: [
                         {
-                            id: 'loan003',
+                            loanId: 'loan003',
                             amount: 200000,
                             interestRate: 7.2,
                             startDate: '2022-11-01',
@@ -170,7 +170,7 @@ const clientSlice = createSlice({
                             loanType:'education'
                         },
                         {
-                            id: 'loan002',
+                            loanId: 'loan002',
                             amount: 140000,
                             interestRate: 2.2,
                             startDate: '2022-10-23',
@@ -209,15 +209,19 @@ const clientSlice = createSlice({
         },
         addTransaction(state,action){
             const transaction = action.payload.transaction;
-            console.log(transaction);
+            //console.log(transaction);
             const account = state.client.accounts.find((account)=>account.accountId===action.payload.accountId);
             account.transactions.push(transaction);
             account.balance-=transaction.amount;
             console.log("added");
-            console.log(account.transactions);
+            //console.log(account.transactions);
         },
         addLoan(state,action){
-
+            const loan  = action.payload.loan;
+            console.log(loan);
+            const account = state.client.accounts.find((account)=>account.accountId===action.payload.accountId);
+            account.loans.push(loan);
+            console.log("Loan added (Waiting for approval)");
         },
         resetAccountId(state,action){
             state.selectedAccount=null;
@@ -229,8 +233,12 @@ const clientSlice = createSlice({
             accounts.push(account);
             console.log("Account added..");
         },
+        setClient(state,action){
+            const client = action.payload;
+            state.client = client;
+        }
     }
 });
 
-export const { addAccount, deleteAccount, editContactInfo, setSelectedAccount,addTransaction,addLoan,resetAccountId } = clientSlice.actions;
+export const { addAccount, deleteAccount, editContactInfo, setSelectedAccount,addTransaction,addLoan,resetAccountId ,setClient} = clientSlice.actions;
 export default clientSlice.reducer;

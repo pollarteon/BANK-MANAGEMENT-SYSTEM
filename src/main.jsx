@@ -43,7 +43,7 @@ const router = createBrowserRouter([
               {path:'transactions/new',element:<UserForm type={'transaction'}/>},
               { path: 'loans', element: <Loans /> },
               {path:'loans/new',element:<UserForm type={'loan'}/>},
-              {path:'accounts/new',element:<UserForm type={'account'}/>}
+              {path:'new',element:<UserForm type={'account'}/>}
             ]
           }
         ]
