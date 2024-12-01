@@ -3,6 +3,11 @@ import CustomInput from "../../UI/CustomInput";
 import styled from "styled-components";
 import SelectInput from "../../UI/SelectInput";
 
+import { query, where ,collection , getDocs } from "firebase/firestore";
+import { db } from "../../../firebase";
+import { signInWithEmailAndPassword} from "firebase/auth";
+import { auth } from "../../../firebase";
+
 const LoginFormStyle = styled.div`
     overflow: hidden;
     
@@ -17,9 +22,60 @@ export default function LoginForm({ setFormData, handleSubmit, formData, userTyp
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+    
+        try {
+            // Step 1: Authenticate the user with Firebase Auth
+            const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+            const user = userCredential.user;
+    
+            // Step 2: Define the collection based on userType
+            const collectionName = userType === "employee" ? "employees" : "clients";
+            const userCollectionRef = collection(db, collectionName);
+    
+            // Step 3: Query Firestore for documents matching the email
+            const q = query(userCollectionRef, where("uid", "==", user.uid));
+            const querySnapshot = await getDocs(q);
+    
+            if (querySnapshot.empty) {
+                alert("No matching user found in Firestore.");
+                return;
+            }
+    
+            const userData = querySnapshot.docs[0].data(); // Assuming only one matching document
+    
+            // Step 4: Validate additional fields
+            if (userType === "client") {
+                if (userData.branch !== formData.branch) {
+                    alert("Branch mismatch.");
+                    return;
+                }
+            } else if (userType === "employee") {
+                if (userData.employeeId !== formData.employeeId || userData.branch !== formData.branch) {
+                    alert("Employee ID or branch mismatch.");
+                    return;
+                }
+            }
+    
+            // Step 5: Call handleSubmit
+            alert("Login successful!");
+            if(handleSubmit){
+                handleSubmit(e);
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            alert(error.message);
+        }
+    };
+
+
+
+
     return (
         <LoginFormStyle>
-            <form onSubmit={handleSubmit} className="auth-form" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: "center" }}>
+            <form onSubmit={handleLogin} className="auth-form" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: "center" }}>
 
                 <CustomInput  label={"E-MAIL"} type="email" name="email" value={formData.email} onChange={handleChange} required />
                 <CustomInput label={"PASSWORD"} type="password" name="password" value={formData.password} onChange={handleChange} required configs={{minLength:5}}/>

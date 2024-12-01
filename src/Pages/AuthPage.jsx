@@ -10,6 +10,8 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 
+
+
 // Styled Components
 const FormContainer = styled.div`
     
@@ -70,6 +72,10 @@ export default function AuthPage() {
       }      
     },[formValidity])
 
+
+
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(formData);
@@ -88,6 +94,10 @@ export default function AuthPage() {
             navigate('/employee/e1');
         }
     };
+
+
+
+
 
     return (
         <PageStyle>

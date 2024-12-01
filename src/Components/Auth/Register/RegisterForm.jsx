@@ -3,6 +3,12 @@ import CustomInput from "../../UI/CustomInput";
 import styled from "styled-components";
 import SelectInput from "../../UI/SelectInput";
 
+import { collection , addDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../firebase";
+
+
 const LoginFormStyle = styled.div`
     overflow: hidden;
     display: flex;
@@ -11,14 +17,61 @@ const LoginFormStyle = styled.div`
     background: white;
 `;
 
-export default function RegisterForm({ setFormData, handleSubmit, formData, userType }) {
+export default function RegisterForm({ setFormData, handleSubmit,formData, userType }) {
+
+    
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
+
+
+
+
+    const handleFirestoreSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            // Step 1: Register user with Firebase Authentication
+            const userCredential = await createUserWithEmailAndPassword(
+                auth,
+                formData.email,
+                formData.password
+            );
+            const user = userCredential.user; // Firebase-authenticated user
+            const collectionName = userType === "employee" ? "employees" : "clients";
+
+            // Step 2: Add additional details to Firestore
+            await addDoc(collection(db, collectionName), {
+                uid: user.uid, // Link Firestore entry with the Firebase auth user
+                firstName: formData.first_name,
+                lastName: formData.last_name,
+                email: formData.email,
+                phone: formData.phone,
+                userType,
+                branch: formData.branch,
+                ...(userType === "employee" && { employeeId: formData.employeeId, position: formData.position }),
+                ...(userType === "client" && { pin: formData.pin }),
+            });
+
+            // Step 3: Redirect to the dashboard or login page
+            alert("User registered and logged in successfully!");
+
+            if (handleSubmit){
+                handleSubmit(e)
+            }
+
+        } catch (error) {
+            console.error("Error during registration: ", error);
+            alert(error.message); // Show an error message to the user
+        }
+    };
+
+
+
     return (
         <LoginFormStyle>
-            <form onSubmit={handleSubmit} className="auth-form" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: "center" }}>
+            <form onSubmit={handleFirestoreSubmit} className="auth-form" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: "center" }}>
 
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <CustomInput style={{ flex: 1 }} label={"FIRST NAME"} type="text" name="first_name" value={formData.first_name} onChange={handleChange} required />
@@ -53,7 +106,7 @@ export default function RegisterForm({ setFormData, handleSubmit, formData, user
 
 
 
-                <Button title={'Login'} type={'submit'} />
+                <Button title={'Register'} type={'submit'} />
             </form>
         </LoginFormStyle>
 
