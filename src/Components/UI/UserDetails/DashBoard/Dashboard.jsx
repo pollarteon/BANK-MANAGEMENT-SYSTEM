@@ -18,7 +18,8 @@ const DashboradContainer = styled.div`
 export default function Dashboard({ userType }) {
     let dashboardTabs;
 
-    const selectedAccount = useSelector(state => state.client.selectedAccount);
+    const selectedAccountClient = useSelector(state => state.client.selectedAccount);
+    const selectedAccountEmployee = useSelector(state=>state.employee.selectedAccount);
     const client = useSelector(state => state.client.client);
     const employee = useSelector(state => state.employee)
    
@@ -32,18 +33,18 @@ export default function Dashboard({ userType }) {
 
     useEffect(()=>{
         const fetchData = async()=>{
-            if(selectedAccount){
-                const loans =await fetchLoansByAccountId(selectedAccount);
-                const transactions =await fetchtransactionsByAccountId(selectedAccount);
+            if(selectedAccountClient){
+                const loans =await fetchLoansByAccountId(selectedAccountClient);
+                const transactions =await fetchtransactionsByAccountId(selectedAccountClient);
                 console.log(transactions)
                 console.log(loans);
-                dispatch(setTransactions({transactions:transactions,accountId:selectedAccount}));
-                dispatch(setLoans({loans:loans,accountId:selectedAccount}))
+                dispatch(setTransactions({transactions:transactions,accountId:selectedAccountClient}));
+                dispatch(setLoans({loans:loans,accountId:selectedAccountClient}))
             }else{
             }
         }
         fetchData()
-    },[dispatch,selectedAccount])
+    },[dispatch,selectedAccountClient])
 
     function handleAccountChange(event) {
         const selectedAccountId = event.target.value;
@@ -62,13 +63,13 @@ export default function Dashboard({ userType }) {
             { link: ``, title: 'User Details' },
             { link: `accounts/new`, title: 'Add A New Account' }
         ]
-        if (selectedAccount != null) {
+        if (selectedAccountClient != null) {
             dashboardTabs = [...dashboardTabs,
             { link: 'accounts', title: 'Accounts' },
-            { link: `accounts/${selectedAccount}/transactions`, title: 'Transactions' },
-            { link: `accounts/${selectedAccount}/loans`, title: 'Loans' },
-            { link: `accounts/${selectedAccount}/transactions/new`, title: 'Make Transaction' },
-            { link: `accounts/${selectedAccount}/loans/new`, title: 'Apply Loan' },
+            { link: `accounts/${selectedAccountClient}/transactions`, title: 'Transactions' },
+            { link: `accounts/${selectedAccountClient}/loans`, title: 'Loans' },
+            { link: `accounts/${selectedAccountClient}/transactions/new`, title: 'Make Transaction' },
+            { link: `accounts/${selectedAccountClient}/loans/new`, title: 'Apply Loan' },
 
             ]
         }
@@ -81,6 +82,12 @@ export default function Dashboard({ userType }) {
             { link:'transactions',title:'All Transactions'},
             { link:'loans',title:'Manage Loans'},
         ]
+        if(selectedAccountEmployee!=null){
+            dashboardTabs=[...dashboardTabs,
+                { link: `clients/${client.clientId}/accounts/${selectedAccountEmployee}/transactions`, title: 'Account Transactions' },
+                { link: `clients/${client.clientId}/accounts/${selectedAccountEmployee}/loans`, title: 'Account Loans' },
+            ]
+        }
     }
 
     return (

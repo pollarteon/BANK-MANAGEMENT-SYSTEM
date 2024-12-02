@@ -22,6 +22,8 @@ export default function Loans({userType,branch}){
         accounts = client.accounts
         account = accounts.find(acc => acc.accountId === selectedAccount);
         loans = account.loans;
+    }else{
+        selectedAccount = useSelector(state=>state.employee.selectedAccount);
     }
     
     const branchId = useSelector(state=>state.employee.employee.branch);
@@ -31,13 +33,12 @@ export default function Loans({userType,branch}){
             let loansFirebase;
             if(branch){
                 loansFirebase = await fetchLoansByBranch(branchId);
-                console.log(loansFirebase)
+                // console.log(loansFirebase)
                 dispatch(setLoans(loansFirebase))
             }
             else if(userType=='employee' && !branch){
-                selectedAccount = useSelector(state=>state.employee.selectedAccount)
                 loansFirebase = await fetchLoansByAccountId(selectedAccount);
-                console.log(loansFirebase)
+                // console.log(loansFirebase)
                 dispatch(setLoans(loansFirebase));
             }
         }

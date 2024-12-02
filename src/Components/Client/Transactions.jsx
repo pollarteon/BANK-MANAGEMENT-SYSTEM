@@ -20,22 +20,26 @@ export default function Transactions({branch,userType}){
         accounts = client.accounts
         account = accounts.find(acc => acc.accountId === selectedAccount);
         transactions = account.transactions;
+    }else{
+        selectedAccount = useSelector(state=>state.employee.selectedAccount)
     }
+    // console.log(selectedAccount)
     const branchId = useSelector(state=>state.employee.employee.branch)
-    
+    // console.log(branchId)
     const dispatch = useDispatch();
     useEffect(()=>{
         const fetchData = async()=>{
             let transactionsFirebase;
             if(branch){
                 transactionsFirebase = await fetchtransactionsByBranch(branchId)   
-                console.log(transactionsFirebase);
+                // console.log(transactionsFirebase);
                 dispatch(setTransactions(transactionsFirebase));
             }
             else if(userType=='employee' && !branch){
-                selectedAccount = useSelector(state=>state.employee.selectedAccount)
+                // console.log("this condition")
+                // console.log(selectedAccount)
                 transactionsFirebase = await fetchtransactionsByAccountId(selectedAccount)
-                console.log(transactionsFirebase);
+                // console.log(transactionsFirebase);
                 dispatch(setTransactions(transactionsFirebase));
             }
         }
@@ -45,6 +49,7 @@ export default function Transactions({branch,userType}){
     if(userType=='employee'){
         transactions = useSelector(state=>state.employee.transactions);
     }
+ 
 
     return (
         <TransactionStyle>

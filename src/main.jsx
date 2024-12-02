@@ -63,12 +63,10 @@ const router = createBrowserRouter([
           {path:'transactions',element:<Transactions userType={'employee'} branch={true}/>},
           {path:'loans',element:<Loans userType={'employee'} branch={true}/>},
           {path:'clients',element:<Clients/>},
-          {
-            path:'clients/:clientId/accounts',element:<AccountDetails userType={'employee'}/>,
-            children:[
-              {path:':accountId',element:<AccountDetails userType={'employee'}/>}
-            ]
-          }
+          {path:'clients/:clientId/accounts',element:<AccountDetails userType={'employee'}/>,},
+          {path:'clients/:clientId/accounts/:accountId',element:<AccountDetails userType={'employee'}/>},
+          {path:'clients/:clientId/accounts/:accountId/transactions',element:<Transactions userType={'employee'} branch={false}/>},
+          {path:'clients/:clientId/accounts/:accountId/loans',element:<Loans userType={'employee'} branch={false}/>}
         ]
       }
     ]
