@@ -502,3 +502,64 @@ export const depositMoneyToAccount = async (accountId, depositAmount) => {
     }
 };
 
+
+//for updating the balance during a transaction. This does not log the transaction as it is done before in the user form before this is called.
+export const conductTransaction = async (senderId, receiverId, transactionAmount) => {
+    try {
+        // Reference to sender and receiver documents
+        const senderDocRef = doc(db, "accounts", senderId);
+        const receiverDocRef = doc(db, "accounts", receiverId);
+
+        // Fetch sender and receiver data
+        const senderSnapshot = await getDoc(senderDocRef);
+        const receiverSnapshot = await getDoc(receiverDocRef);
+
+        if (!senderSnapshot.exists() || !receiverSnapshot.exists()) {
+            console.error("Sender or receiver account not found.");
+            throw new Error("Invalid sender or receiver account ID.");
+        }
+
+        const senderData = senderSnapshot.data();
+        const receiverData = receiverSnapshot.data();
+
+        // Validate sender's balance
+        if (transactionAmount > senderData.balance) {
+            console.error("Insufficient balance in sender's account.");
+            throw new Error("Sender has insufficient balance. Transaction cannot proceed.");
+        }
+
+        // Perform the balance updates
+        const updatedSenderBalance = senderData.balance - transactionAmount;
+        const updatedReceiverBalance = receiverData.balance + transactionAmount;
+
+        // Update both accounts in Firestore
+        const batch = writeBatch(db);
+        batch.update(senderDocRef, { balance: updatedSenderBalance });
+        batch.update(receiverDocRef, { balance: updatedReceiverBalance });
+
+        // Commit the batch update
+        await batch.commit();
+
+        console.log(`Transaction successful. ${transactionAmount} transferred from ${senderId} to ${receiverId}.`);
+        console.log(`New sender balance: ${updatedSenderBalance}`);
+        console.log(`New receiver balance: ${updatedReceiverBalance}`);
+
+        return {
+            success: true,
+            message: `Transaction successful.`,
+            updatedSenderBalance,
+            updatedReceiverBalance,
+        };
+    } catch (error) {
+        console.error("Error conducting transaction:", error);
+        throw new Error("Failed to conduct the transaction. Please try again.");
+    }
+};
+
+
+
+
+
+
+
+
