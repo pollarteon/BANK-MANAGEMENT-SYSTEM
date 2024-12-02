@@ -23,6 +23,7 @@ export const fetchClient = async()=>{
         }
 
         const clientData = clientDocs.docs[0].data(); // Data for the current user
+        
         console.log(clientData);
         return clientData;
     }catch(e){
@@ -60,80 +61,8 @@ export const fetchEmployee = async()=>{
     }
 }
 
-//for fetching all loans by the current user (not account but the uid)
-export const fetchLoansByUID = async () => {
-    const auth = getAuth();
-    const currentUser = auth.currentUser;
-
-    if (!currentUser) {
-        alert("No user is currently logged in. Please log in to continue.");
-        return [];
-    }
-
-    const uid = currentUser.uid; // Firebase Auth UID
-    
-    try {
-        // Step 1: Fetch loans data from Firestore
-        const loansCollectionRef = collection(db, "loans");
-        const loansQuery = query(loansCollectionRef, where("uid", "==", uid));
-        const loansDocs = await getDocs(loansQuery);
-
-        if (loansDocs.empty) {
-            console.log("No loans found for the current user.");
-            return [];
-        }
-
-        // Step 2: Map through documents and extract data
-        const loansData = loansDocs.docs.map(doc => ({
-            id: doc.id,    // Include document ID if needed
-            ...doc.data()  // Spread document data
-        }));
-
-        console.log(loansData); // Logs all matching loan documents
-        return loansData;
-    } catch (e) {
-        console.error("Error fetching loans data: ", e);
-        return [];
-    }
-};
 
 
-//for feftching all transactions by the current user (not account but the uid)
-export const fetchtransactionsByUID = async () => {
-    const auth = getAuth();
-    const currentUser = auth.currentUser;
-
-    if (!currentUser) {
-        alert("No user is currently logged in. Please log in to continue.");
-        return [];
-    }
-
-    const uid = currentUser.uid; // Firebase Auth UID
-    
-    try {
-        // Step 1: Fetch transactions data from Firestore
-        const transactionsCollectionRef = collection(db, "transactions");
-        const transactionsQuery = query(transactionsCollectionRef, where("uid", "==", uid));
-        const transactionsDocs = await getDocs(transactionsQuery);
-
-        if (transactionsDocs.empty) {
-            console.log("No transactions found for the current user.");
-            return [];
-        }
-
-        // Step 2: Map through documents and extract data
-        const transactionsData = transactionsDocs.docs.map(doc => ({
-            id: doc.id,    // Include document ID if needed
-            ...doc.data()  // Spread document data
-        }));
-
-        console.log(transactionsData); // Logs all matching loan documents
-        return transactionsData;
-    } catch (e) {
-        console.error("Error fetching transactions data: ", e);
-        return [];
-    }
-};
 
 
 //for fetching all the loans based on the given branch id 
@@ -151,7 +80,7 @@ export const fetchLoansByBranch = async (branchId) => {
 
         // Step 2: Map through documents and extract data
         const loansData = loansDocs.docs.map(doc => ({
-            id: doc.id,    // Include document ID if needed
+            loanId: doc.id,    // Include document ID if needed
             ...doc.data()  // Spread document data
         }));
 
@@ -182,7 +111,7 @@ export const fetchClientsByBranch = async (branchId) => {
             ...doc.data()  // Spread document data
         }));
 
-        console.log(clientsData); // Logs all matching loan documents
+        // console.log(clientsData); // Logs all matching loan documents
         return clientsData;
     } catch (e) {
         console.error("Error fetching loans data by branch: ", e);
@@ -207,7 +136,7 @@ export const fetchtransactionsByBranch = async (branchId) => {
 
         // Step 2: Map through documents and extract data
         const transactionsData = transactionsDocs.docs.map(doc => ({
-            id: doc.id,    // Include document ID if needed
+            transactionId: doc.id,    // Include document ID if needed
             ...doc.data()  // Spread document data
         }));
 
@@ -219,6 +148,59 @@ export const fetchtransactionsByBranch = async (branchId) => {
     }
 };
 
+//for fetching all the transactions based on the given branch id
+export const fetchAccountsByBranch = async (branchId) => {
+    try {
+        // Step 1: Fetch transactions data from Firestore
+        const accountsCollectionRef = collection(db, "accounts");
+        const accountsQuery = query(accountsCollectionRef, where("branch", "==", branchId));
+        const accountsDocs = await getDocs(accountsQuery);
+
+        if (accountsDocs.empty) {
+            console.log(`No transactions found for branch: ${branchId}`);
+            return [];
+        }
+
+        // Step 2: Map through documents and extract data
+        const accountsData = accountsDocs.docs.map(doc => ({
+            accountId: doc.id,    // Include document ID if needed
+            ...doc.data()  // Spread document data
+        }));
+
+        console.log(accountsData); // Logs all matching transaction documents
+        return accountsData;
+    } catch (e) {
+        console.error("Error fetching transactions data by branch: ", e);
+        return [];
+    }
+};
+
+//for fetching all the transactions based on the given branch id
+export const fetchAccountsByClientId = async (clientId) => {
+    try {
+        // Step 1: Fetch transactions data from Firestore
+        const accountsCollectionRef = collection(db, "accounts");
+        const accountsQuery = query(accountsCollectionRef, where("clientId", "==", clientId));
+        const accountsDocs = await getDocs(accountsQuery);
+
+        if (accountsDocs.empty) {
+            console.log(`No transactions found for client: ${clientId}`);
+            return [];
+        }
+
+        // Step 2: Map through documents and extract data
+        const accountsData = accountsDocs.docs.map(doc => ({
+            accountId: doc.id,    // Include document ID if needed
+            ...doc.data()  // Spread document data
+        }));
+
+        console.log(accountsData); // Logs all matching transaction documents
+        return accountsData;
+    } catch (e) {
+        console.error("Error fetching transactions data by branch: ", e);
+        return [];
+    }
+};
 
 
 
@@ -337,6 +319,128 @@ export const depositMoneyToAccount = async (accountId, depositAmount) => {
     }
 };
 
+export const updateLoanDetails = async (loanId, updatedFields,accountId) => {
+    try {
+        // Reference to the loan document
+        const loanDocRef = doc(db, "loans", loanId);
+
+        // Fetch the current loan data
+        const loanSnapshot = await getDoc(loanDocRef);
+
+        if (!loanSnapshot.exists()) {
+            console.error("Loan not found");
+            throw new Error("Loan not found. Please provide a valid loan ID.");
+        }
+
+        const loanData = loanSnapshot.data();
+
+        // Prepare the updated loan data
+        const updatedLoanData = {
+            ...loanData,
+            ...updatedFields, // Merge new fields with the existing data
+        };
+
+        // Update the loan details in Firestore
+        await updateDoc(loanDocRef, updatedLoanData);
+
+        console.log(`Successfully updated loan ${loanId}.`, updatedLoanData);
+
+
+        // If the status is updated to 'Active', update the account balance
+        if (updatedFields.status === 'Active') {
+            // Reference to the account document
+            const accountDocRef = doc(db, "accounts", accountId);
+
+            // Fetch the current account data
+            const accountSnapshot = await getDoc(accountDocRef);
+
+            if (!accountSnapshot.exists()) {
+                console.error("Account not found");
+                throw new Error("Account not found. Please provide a valid account ID.");
+            }
+
+            const accountData = accountSnapshot.data();
+
+            // Update the account balance by adding the loan amount
+            const newBalance = accountData.balance + (loanData.loanAmount);
+
+            // Update the account's balance in Firestore
+            await updateDoc(accountDocRef, { balance: newBalance });
+
+            console.log(`Account ${accountId} balance updated. New balance: ${newBalance}`);
+        }
+
+         // Fetch all loans from the loans collection
+         let loansCollectionRef = collection(db, "loans");
+         let loansSnapshot = await getDocs(loansCollectionRef);
+ 
+         const allLoans = loansSnapshot.docs.map((doc) => ({
+             loanId: doc.id,
+             ...doc.data(),
+         }));
+ 
+         console.log("All loans after update:", allLoans);
+        loansCollectionRef = collection(db, "loans");
+        const loansQuery = query(loansCollectionRef, where("accountId", "==", accountId));
+        loansSnapshot = await getDocs(loansQuery);
+
+        const filteredLoans = loansSnapshot.docs.map((doc) => ({
+            loanId: doc.id,
+            ...doc.data(),
+        }));
+
+        console.log("Loans for accountId after update:", filteredLoans);
+
+        return {
+            success: true,
+            message: `Loan updated successfully.`,
+            updatedLoan: updatedLoanData,
+            loans: filteredLoans,
+            allLoans
+        };
+
+    } catch (error) {
+        console.error("Error updating loan details:", error);
+        throw new Error("Failed to update loan details. Please try again.");
+    }
+};
+
+//fetching accounts by UID
+export const fetchAccountsByUID = async () => {
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+        alert("No user is currently logged in. Please log in to continue.");
+        return [];
+    }
+
+    const uid = currentUser.uid; // Firebase Auth UID
+    
+    try {
+        // Step 1: Fetch loans data from Firestore
+        const accountsCollectionRef = collection(db, "accounts");
+        const accountsQuery = query(accountsCollectionRef, where("uid", "==", uid));
+        const accountsDocs = await getDocs(accountsQuery);
+
+        if (accountsDocs.empty) {
+            console.log("No accounts found for the current user.");
+            return [];
+        }
+
+        // Step 2: Map through documents and extract data
+        const accountsData = accountsDocs.docs.map(doc => ({
+            accountId: doc.id,    // Include document ID if needed
+            ...doc.data()  // Spread document data
+        }));
+
+        console.log(accountsData); // Logs all matching loan documents
+        return accountsData;
+    } catch (e) {
+        console.error("Error fetching Accounts data: ", e);
+        return [];
+    }
+};
 
 //for updating the balance amount when some amount is withdrawn
 export const withdrawMoneyFromAccount = async (accountId, withdrawalAmount) => {

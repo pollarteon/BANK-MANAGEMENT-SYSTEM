@@ -139,6 +139,7 @@ export default function UserForm({ type }) {
                 transactions: [],
                 loans: [],
                 createdDate: getCurrentDate(),
+                clientId:client.clientId
             };
             collectionName = "accounts";
             navigationPath = "../";
@@ -151,7 +152,7 @@ export default function UserForm({ type }) {
                 branch: formData.branch,
                 interestRate: formData.interestRate,
                 loanType: formData.loanType,
-                loanAmount: formData.loanAmount,
+                loanAmount:parseInt(formData.loanAmount),
                 loanPurpose: formData.loanPurpose,
                 loanTerm: formData.loanTerm,
                 monthlyPayment: formData.monthlyPayment,
@@ -167,7 +168,7 @@ export default function UserForm({ type }) {
             // Prepare transaction data
             dataToSubmit = {
                 accountId: formData.accountId,
-                amount: formData.amount,
+                amount: parseInt(formData.amount),
                 branch: formData.branch,
                 uid,
                 date: getCurrentDate(),

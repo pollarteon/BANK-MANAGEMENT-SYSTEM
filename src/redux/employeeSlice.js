@@ -279,7 +279,11 @@ const employeeSlice = createSlice({
                 },
             ] ,
         },  
+        accounts:[],
+        transactions:[],
+        loans:[],
         selectedClient:null,
+        selectedAccount:null,
     },
     reducers: {
         setSelectedClient(state, action) {
@@ -290,15 +294,28 @@ const employeeSlice = createSlice({
         resetClientId(state,action){
             state.selectedClient=null;
         },
+        setselectedAccount(state,action){
+            state.selectedAccount = action.payload
+        },
         setEmployee(state,action){
             state.employee=action.payload;
-            console.log(state.employee)
+            // console.log(state.employee)
         },
         setClients(state,action){
             state.clients = action.payload;
+        },
+        setAccounts(state,action){
+            console.log("Setted Accounts");
+            state.accounts = action.payload;
+        },
+        setTransactions(state,action){
+            state.transactions = action.payload;
+        },
+        setLoans(state,action){
+            state.loans = action.payload
         }
     }
 });
 
-export const { setSelectedClient,resetClientId ,setClients,setEmployee} = employeeSlice.actions;
+export const { setSelectedClient,resetClientId ,setClients,setEmployee,setAccounts,setselectedAccount,setTransactions,setLoans} = employeeSlice.actions;
 export default employeeSlice.reducer;

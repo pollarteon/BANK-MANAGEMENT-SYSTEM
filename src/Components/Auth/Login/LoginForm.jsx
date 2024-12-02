@@ -61,10 +61,10 @@ export default function LoginForm({ setFormData, handleSubmit, formData, userTyp
                     return;
                 }
             } else if (userType === "employee") {
-                if (userData.employeeId !== formData.employeeId || userData.branch !== formData.branch) {
-                    alert("Employee ID or branch mismatch.");
-                    return;
-                }
+                // if (userData.employeeId !== formData.employeeId || userData.branch !== formData.branch) {
+                //     alert("Employee ID or branch mismatch.");
+                //     return;
+                // }
             }
             // Step 5: Call handleSubmit 
             if(handleSubmit){
