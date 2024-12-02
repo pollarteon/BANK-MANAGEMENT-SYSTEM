@@ -18,7 +18,7 @@ export default function Clients(){
     const clients = useSelector(state=>state.employee.clients);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    console.log(clients)
+    // console.log(clients)
     const handleClick = (clientId)=>{
         dispatch(setSelectedClient({selectedClient:clientId}));
         navigate(`${clientId}/accounts`);

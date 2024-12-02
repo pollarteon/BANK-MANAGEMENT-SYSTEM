@@ -5,6 +5,7 @@ export default function Details({userType}) {
     const client = useSelector(state=>state.client.client);
     const employee = useSelector(state=>state.employee.employee);
     var personalInfo,contactInfo,creationTime,lastLogin,employeeDetails;
+
     if(userType=='client'){
         personalInfo = client.personalInfo;
         contactInfo = client.contactInfo;
@@ -17,7 +18,7 @@ export default function Details({userType}) {
         lastLogin=employee.lastLoginTime;
         employeeDetails=employee.employeeDetails
     }
-
+    
     
     const personalInfoArray = [
         {label:'ID',value:client.clientId},

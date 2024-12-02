@@ -37,7 +37,7 @@ const LabelStyle = styled.div`
     border: solid 1px;
 `
 
-export default function AccountDetailBlock({ account }) {
+export default function AccountDetailBlock({ account,onclick }) {
 
     let backgroundColor = '#6affdf'
 
@@ -51,7 +51,7 @@ export default function AccountDetailBlock({ account }) {
     }
 
     return (
-        <AccountBlockContainer >
+        <AccountBlockContainer onClick={()=>onclick(account.accountId)}>
             <AccountIdStyle backgroundcolor={backgroundColor}>Account_ID : {account.accountId}</AccountIdStyle>
             <div style={{ display: 'flex' }}>
                 <Label label={'Account_Holder'} value={account.accountHolder} />
@@ -62,14 +62,14 @@ export default function AccountDetailBlock({ account }) {
                 <Label label={'Interest_Rate'} value={account.interestRate} />
                 <Label label={'Created_Date'} value={account.createdDate} />
             </div>
-            {userType === 'employee' && <> <DepositHeaderStyle>
+            {/* {userType === 'employee' && <> <DepositHeaderStyle>
                 MAKE DEPOSIT
             </DepositHeaderStyle>
                 <div style={{ display: "flex" }}>
                     <label htmlFor="amount">ENTER AMOUNT</label>
                     <input type="number" name="amount" id="amount" onChange={handleChange} value={amount} />
                 </div></>
-            }
+            } */}
 
         </AccountBlockContainer>
     )

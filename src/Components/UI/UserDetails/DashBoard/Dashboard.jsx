@@ -21,8 +21,11 @@ export default function Dashboard({ userType }) {
     const selectedAccount = useSelector(state => state.client.selectedAccount);
     const client = useSelector(state => state.client.client);
     const employee = useSelector(state => state.employee)
+   
     const accounts = client.accounts;
     const options = accounts.map(account => account.accountId);
+    
+   
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -73,7 +76,10 @@ export default function Dashboard({ userType }) {
     if (userType === 'employee') {
         dashboardTabs = [
             { link: '', title: 'Employee Details' },
-            { link: 'clients', title: 'View All Clients' }
+            { link: 'clients', title: 'View All Clients' },
+            { link:'accounts',title:'All Accounts'},
+            { link:'transactions',title:'All Transactions'},
+            { link:'loans',title:'Manage Loans'},
         ]
     }
 

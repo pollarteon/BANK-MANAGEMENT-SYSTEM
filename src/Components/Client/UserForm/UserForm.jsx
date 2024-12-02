@@ -139,6 +139,7 @@ export default function UserForm({ type }) {
                 transactions: [],
                 loans: [],
                 createdDate: getCurrentDate(),
+                clientId:client.clientId
             };
             collectionName = "accounts";
             navigationPath = "../";

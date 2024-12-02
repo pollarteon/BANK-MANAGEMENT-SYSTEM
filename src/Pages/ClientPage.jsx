@@ -31,18 +31,19 @@ export default function ClientPage() {
     const dispatch = useDispatch();
     const animationkey = location.pathname
 
-    // console.log(client);
-
+    
     useEffect(()=>{
         const fetchData = async()=>{
             const client = await fetchClient();
             const accounts = await fetchAccountsByUID();
-            
+            console.log(client)
             dispatch(setClient(client))
             dispatch(setAccounts(accounts));
             
         } 
-        fetchData();
+        if(client.clientId==null){
+            fetchData();
+        }
     },[dispatch])
 
     

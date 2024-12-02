@@ -3,7 +3,7 @@ import CustomInput from "../../UI/CustomInput";
 import styled from "styled-components";
 import SelectInput from "../../UI/SelectInput";
 
-import { collection , addDoc } from "firebase/firestore";
+import { collection , addDoc,updateDoc,doc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebase";
@@ -43,7 +43,7 @@ export default function RegisterForm({ setFormData, handleSubmit,formData, userT
             const collectionName = userType === "employee" ? "employees" : "clients";
 
             // Step 2: Add additional details to Firestore
-            await addDoc(collection(db, collectionName), {
+            const docRef =await addDoc(collection(db, collectionName), {
                 uid: user.uid, // Link Firestore entry with the Firebase auth user
                 personalInfo:{
                     firstName: formData.first_name,
@@ -61,6 +61,16 @@ export default function RegisterForm({ setFormData, handleSubmit,formData, userT
                 ...(userType === "employee" && {employeeDetails: {employeeId: formData.employeeId, position: formData.position} }),
                 ...(userType === "client" && { pin: formData.pin }),
             });
+            if(userType==='client'){
+                await updateDoc(doc(db, collectionName, docRef.id), {
+                    clientId: docRef.id,
+                });
+            }else{
+                await updateDoc(doc(db, collectionName, docRef.id), {
+                    employeeId: docRef.id,
+                });
+            }
+           
 
        
             alert("User registered and logged in successfully!");

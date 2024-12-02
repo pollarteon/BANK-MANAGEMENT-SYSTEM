@@ -23,6 +23,7 @@ export const fetchClient = async()=>{
         }
 
         const clientData = clientDocs.docs[0].data(); // Data for the current user
+        
         console.log(clientData);
         return clientData;
     }catch(e){
@@ -151,7 +152,7 @@ export const fetchLoansByBranch = async (branchId) => {
 
         // Step 2: Map through documents and extract data
         const loansData = loansDocs.docs.map(doc => ({
-            id: doc.id,    // Include document ID if needed
+            loanId: doc.id,    // Include document ID if needed
             ...doc.data()  // Spread document data
         }));
 
@@ -182,7 +183,7 @@ export const fetchClientsByBranch = async (branchId) => {
             ...doc.data()  // Spread document data
         }));
 
-        console.log(clientsData); // Logs all matching loan documents
+        // console.log(clientsData); // Logs all matching loan documents
         return clientsData;
     } catch (e) {
         console.error("Error fetching loans data by branch: ", e);
@@ -207,7 +208,7 @@ export const fetchtransactionsByBranch = async (branchId) => {
 
         // Step 2: Map through documents and extract data
         const transactionsData = transactionsDocs.docs.map(doc => ({
-            id: doc.id,    // Include document ID if needed
+            transactionId: doc.id,    // Include document ID if needed
             ...doc.data()  // Spread document data
         }));
 
@@ -219,6 +220,59 @@ export const fetchtransactionsByBranch = async (branchId) => {
     }
 };
 
+//for fetching all the transactions based on the given branch id
+export const fetchAccountsByBranch = async (branchId) => {
+    try {
+        // Step 1: Fetch transactions data from Firestore
+        const accountsCollectionRef = collection(db, "accounts");
+        const accountsQuery = query(accountsCollectionRef, where("branch", "==", branchId));
+        const accountsDocs = await getDocs(accountsQuery);
+
+        if (accountsDocs.empty) {
+            console.log(`No transactions found for branch: ${branchId}`);
+            return [];
+        }
+
+        // Step 2: Map through documents and extract data
+        const accountsData = accountsDocs.docs.map(doc => ({
+            accountId: doc.id,    // Include document ID if needed
+            ...doc.data()  // Spread document data
+        }));
+
+        console.log(accountsData); // Logs all matching transaction documents
+        return accountsData;
+    } catch (e) {
+        console.error("Error fetching transactions data by branch: ", e);
+        return [];
+    }
+};
+
+//for fetching all the transactions based on the given branch id
+export const fetchAccountsByClientId = async (clientId) => {
+    try {
+        // Step 1: Fetch transactions data from Firestore
+        const accountsCollectionRef = collection(db, "accounts");
+        const accountsQuery = query(accountsCollectionRef, where("clientId", "==", clientId));
+        const accountsDocs = await getDocs(accountsQuery);
+
+        if (accountsDocs.empty) {
+            console.log(`No transactions found for client: ${clientId}`);
+            return [];
+        }
+
+        // Step 2: Map through documents and extract data
+        const accountsData = accountsDocs.docs.map(doc => ({
+            accountId: doc.id,    // Include document ID if needed
+            ...doc.data()  // Spread document data
+        }));
+
+        console.log(accountsData); // Logs all matching transaction documents
+        return accountsData;
+    } catch (e) {
+        console.error("Error fetching transactions data by branch: ", e);
+        return [];
+    }
+};
 
 
 

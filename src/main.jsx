@@ -43,9 +43,9 @@ const router = createBrowserRouter([
           {
             path: 'accounts/:accountId', element:  <Accounts/>, children: [
               {path:'',element:<AccountDetails userType={'client'}/>},
-              { path: 'transactions', element: <Transactions /> },
+              { path: 'transactions', element: <Transactions userType={'client'} /> },
               {path:'transactions/new',element:<UserForm type={'transaction'}/>},
-              { path: 'loans', element: <Loans /> },
+              { path: 'loans', element: <Loans userType='client'/> },
               {path:'loans/new',element:<UserForm type={'loan'}/>},
               
             ]
@@ -59,8 +59,16 @@ const router = createBrowserRouter([
           </ProtectedRoute>,
         children:[
           {path:'',element:<Details userType={'employee'}/>},
+          {path:'accounts',element:<AccountDetails userType={'employee'} branch={true}/>},
+          {path:'transactions',element:<Transactions userType={'employee'} branch={true}/>},
+          {path:'loans',element:<Loans userType={'employee'} branch={true}/>},
           {path:'clients',element:<Clients/>},
-          {path:'clients/:clientId/accounts',element:<AccountDetails userType={'employee'}/>}
+          {
+            path:'clients/:clientId/accounts',element:<AccountDetails userType={'employee'}/>,
+            children:[
+              {path:':accountId',element:<AccountDetails userType={'employee'}/>}
+            ]
+          }
         ]
       }
     ]

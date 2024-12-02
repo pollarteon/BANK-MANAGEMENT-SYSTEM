@@ -24,7 +24,7 @@ const ClientIdStyle = styled.div`
 
 export default function ClientBlock({client,onClick}){
 
-    console.log(client)
+    // console.log(client)
 
     return (
         <ClientBlockContainer onClick={()=>onClick(client.clientId)}>
