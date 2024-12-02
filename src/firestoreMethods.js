@@ -503,44 +503,6 @@ export const withdrawMoneyFromAccount = async (accountId, withdrawalAmount) => {
 };
 
 
-//fetching accounts by UID
-export const fetchAccountsByUID = async () => {
-    const auth = getAuth();
-    const currentUser = auth.currentUser;
-
-    if (!currentUser) {
-        alert("No user is currently logged in. Please log in to continue.");
-        return [];
-    }
-
-    const uid = currentUser.uid; // Firebase Auth UID
-    
-    try {
-        // Step 1: Fetch loans data from Firestore
-        const accountsCollectionRef = collection(db, "accounts");
-        const accountsQuery = query(accountsCollectionRef, where("uid", "==", uid));
-        const accountsDocs = await getDocs(accountsQuery);
-
-        if (accountsDocs.empty) {
-            console.log("No accounts found for the current user.");
-            return [];
-        }
-
-        // Step 2: Map through documents and extract data
-        const accountsData = accountsDocs.docs.map(doc => ({
-            accountId: doc.id,    // Include document ID if needed
-            ...doc.data()  // Spread document data
-        }));
-
-        console.log(accountsData); // Logs all matching loan documents
-        return accountsData;
-    } catch (e) {
-        console.error("Error fetching Accounts data: ", e);
-        return [];
-    }
-};
-
-
 //for updating the balance during a transaction. This does not log the transaction as it is done before in the user form before this is called.
 export const conductTransaction = async (senderId, receiverId, transactionAmount) => {
     try {
