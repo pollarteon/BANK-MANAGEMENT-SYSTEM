@@ -66,7 +66,7 @@ export default function AccountDetailBlock({ account, onclick }) {
         e.preventDefault();
         if(!amount)return;
         const result = await withdrawMoneyFromAccount(account.accountId,amount);
-        const accounts = await fetchAccountsByClientId(client.clientId)
+        const accounts = await fetchAccountsByClientId(client.clientId) 
         dispatch(setAccounts(accounts));
         setAmount();
         console.log(result)
