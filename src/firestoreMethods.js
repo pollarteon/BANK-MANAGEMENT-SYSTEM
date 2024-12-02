@@ -265,59 +265,7 @@ export const fetchtransactionsByAccountId = async (accountId) => {
 };
 
 
-//for updating the balance amount when some amount is deposited
-export const depositMoneyToAccount = async (accountId, depositAmount) => {
-    try {
-        // Reference to the account document
-        const accountDocRef = doc(db, "accounts", accountId);
 
-        // Fetch the current account data
-        const accountSnapshot = await getDoc(accountDocRef);
-
-        if (!accountSnapshot.exists()) {
-            console.error("Account not found");
-            throw new Error("Account not found. Please provide a valid account ID.");
-        }
-
-        const accountData = accountSnapshot.data();
-
-        // Calculate the new balance
-        const newBalance = accountData.balance + depositAmount;
-
-        // Update the account's balance in Firestore
-        await updateDoc(accountDocRef, { balance: newBalance });
-
-        console.log(`Successfully deposited ${depositAmount} to account ${accountId}. New balance: ${newBalance}`);
-
-        // Log the deposit as a transaction
-        const transactionData = {
-            accountId,
-            amount: depositAmount,
-            branch: accountData.branch,
-            uid: accountData.uid, 
-            date: getCurrentDate(),
-            description: "Deposit",
-            recipient: "self",
-            status: "Completed",
-            type: "Credit",
-        };
-
-        const transactionsCollectionRef = collection(db, "transactions");
-        const transactionDocRef = await addDoc(transactionsCollectionRef, transactionData);
-
-        console.log("Transaction logged successfully with ID:", transactionDocRef.id);
-
-        return {
-            success: true,
-            message: `Deposit successful. New balance: ${newBalance}`,
-            transactionId: transactionDocRef.id,
-        };
-
-    } catch (error) {
-        console.error("Error depositing money:", error);
-        throw new Error("Failed to deposit money. Please try again.");
-    }
-};
 
 export const updateLoanDetails = async (loanId, updatedFields,accountId) => {
     try {
@@ -465,7 +413,7 @@ export const withdrawMoneyFromAccount = async (accountId, withdrawalAmount) => {
         }
 
         // Calculate the new balance
-        const newBalance = accountData.balance - withdrawalAmount;
+        const newBalance = accountData.balance - parseInt(withdrawalAmount);
 
         // Update the account's balance in Firestore
         await updateDoc(accountDocRef, { balance: newBalance });
@@ -478,7 +426,6 @@ export const withdrawMoneyFromAccount = async (accountId, withdrawalAmount) => {
             amount: withdrawalAmount,
             branch: accountData.branch,
             uid: accountData.uid, // Assuming the account has a uid field for the user
-            date: getCurrentDate(),
             description: "Withdrawal",
             recipient: "self",
             status: "Completed",
@@ -499,6 +446,59 @@ export const withdrawMoneyFromAccount = async (accountId, withdrawalAmount) => {
     } catch (error) {
         console.error("Error withdrawing money:", error);
         throw new Error("Failed to withdraw money. Please try again.");
+    }
+};
+
+//for updating the balance amount when some amount is deposited
+export const depositMoneyToAccount = async (accountId, depositAmount) => {
+    try {
+        // Reference to the account document
+        const accountDocRef = doc(db, "accounts", accountId);
+
+        // Fetch the current account data
+        const accountSnapshot = await getDoc(accountDocRef);
+
+        if (!accountSnapshot.exists()) {
+            console.error("Account not found");
+            throw new Error("Account not found. Please provide a valid account ID.");
+        }
+
+        const accountData = accountSnapshot.data();
+
+        // Calculate the new balance
+        const newBalance = accountData.balance + parseInt(depositAmount);
+
+        // Update the account's balance in Firestore
+        await updateDoc(accountDocRef, { balance: newBalance });
+
+        console.log(`Successfully deposited ${depositAmount} to account ${accountId}. New balance: ${newBalance}`);
+
+        // Log the deposit as a transaction
+        const transactionData = {
+            accountId,
+            amount: depositAmount,
+            branch: accountData.branch,
+            uid: accountData.uid, 
+            description: "Deposit",
+            recipient: "self",
+            status: "Completed",
+            type: "Credit",
+        };
+
+        const transactionsCollectionRef = collection(db, "transactions");
+        const transactionDocRef = await addDoc(transactionsCollectionRef, transactionData);
+
+        console.log("Transaction logged successfully with ID:", transactionDocRef.id);
+
+        return {
+            success: true,
+            message: `Deposit successful. New balance: ${newBalance}`,
+            transactionId: transactionDocRef.id,
+        };
+
+    } catch (error) {
+        console.error("Error depositing money:", error);
+        throw new Error("Failed to deposit money. Please try again.");
     }
 };
 
