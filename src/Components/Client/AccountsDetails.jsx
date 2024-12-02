@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { fetchAccountsByBranch, fetchAccountsByClientId } from "../../firestoreMethods";
 import { setAccounts, setselectedAccount} from "../../redux/employeeSlice";
 import { useNavigate } from "react-router-dom";
+import { setAccounts as setClientAccounts } from "../../redux/clientSlice";
 
 const AccountsStyle = styled.div`
     overflow-y: scroll;
@@ -21,19 +22,24 @@ export default function AccountDetails({ userType ,branch}) {
     const [loading,setloading] = useState(false);
     var client, clients;
     let accounts;
-
+    const selectedAccount = useSelector(state=>state.employee.selectedAccount)
     const dispatch = useDispatch()
     const navigate = useNavigate();
     function handleClick(accountId){
         // console.log(accountId)
         dispatch(setselectedAccount(accountId))
-        if(userType=='employee')
-        navigate(`${accountId}`);
+        if(userType=='employee' && !branch )
+        navigate(`/employee/e1/clients/${selectedClient}/accounts/${accountId}`,{replace:true});
+        
     }
-    
-    
+    if (userType == 'client') {
+        client = useSelector(state => state.client.client);
+        accounts = client.accounts
+    }
+     
     useEffect(()=>{
         const fetchData = async()=>{
+            let clientAccounts;
             if(branch){
                 setloading(true)
                 accounts = await fetchAccountsByBranch(branchId);
@@ -42,7 +48,15 @@ export default function AccountDetails({ userType ,branch}) {
             }else{
                 setloading(true);
                 accounts = await fetchAccountsByClientId(selectedClient);
+                console.log("Selected client Employee side",accounts,selectedClient)
+                
+                if(userType==='employee')
                 dispatch(setAccounts(accounts));
+                else{
+                    clientAccounts = await fetchAccountsByClientId(client.clientId);
+                    dispatch(setClientAccounts(clientAccounts));
+                }
+                
                 setloading(false)
             }
         }
@@ -51,14 +65,7 @@ export default function AccountDetails({ userType ,branch}) {
      
     },[])
 
-    if (userType == 'client') {
-        client = useSelector(state => state.client.client);
-        accounts = client.accounts
-    }
-    else {
-        clients = useSelector(state => state.employee.clients)
-        client = clients.find((client) => client.clientId === selectedClient);
-    }
+    
    
    if(userType==='employee')
     accounts = useSelector(state=>state.employee.accounts)

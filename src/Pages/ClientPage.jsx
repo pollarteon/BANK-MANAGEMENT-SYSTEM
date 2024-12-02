@@ -37,6 +37,7 @@ export default function ClientPage() {
             const client = await fetchClient();
             const accounts = await fetchAccountsByUID();
             console.log(client)
+            console.log(accounts)
             dispatch(setClient(client))
             dispatch(setAccounts(accounts));
             

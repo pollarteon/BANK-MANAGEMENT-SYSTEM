@@ -5,6 +5,7 @@ import Header from "../UI/Header";
 import { useEffect } from "react";
 import { fetchLoansByAccountId, fetchLoansByBranch } from "../../firestoreMethods";
 import { setLoans } from "../../redux/employeeSlice";
+import { setLoans as setClientLoans } from "../../redux/clientSlice";
 
 
 const LoansStyle = styled.div`
@@ -36,10 +37,13 @@ export default function Loans({userType,branch}){
                 // console.log(loansFirebase)
                 dispatch(setLoans(loansFirebase))
             }
-            else if(userType=='employee' && !branch){
+            else{
                 loansFirebase = await fetchLoansByAccountId(selectedAccount);
                 // console.log(loansFirebase)
+                if(userType==='employee')
                 dispatch(setLoans(loansFirebase));
+                else
+                dispatch(setClientLoans({loans:loansFirebase,accountId:selectedAccount}))
             }
         }
         fetchData();
@@ -53,7 +57,7 @@ export default function Loans({userType,branch}){
     return (
         <LoansStyle>
              <Header title={'LOANS'} color={'#73ff51'}/>
-            {loans.map((loan)=> <LoansBlock key={loan.loanId} loan={loan}/>)}
+            {loans.map((loan)=> <LoansBlock key={loan.loanId} loan={loan} branch={branch}/>)}
         </LoansStyle>
     )
 }

@@ -5,6 +5,7 @@ import Header from "../UI/Header";
 import { useEffect } from "react";
 import { fetchtransactionsByAccountId, fetchtransactionsByBranch } from "../../firestoreMethods";
 import { setTransactions } from "../../redux/employeeSlice";
+import { setTransactions as setClientTransactions } from "../../redux/clientSlice";
 const TransactionStyle = styled.div`
     overflow-y: scroll;
     height: 90vh;
@@ -35,12 +36,15 @@ export default function Transactions({branch,userType}){
                 // console.log(transactionsFirebase);
                 dispatch(setTransactions(transactionsFirebase));
             }
-            else if(userType=='employee' && !branch){
+            else{
                 // console.log("this condition")
                 // console.log(selectedAccount)
                 transactionsFirebase = await fetchtransactionsByAccountId(selectedAccount)
                 // console.log(transactionsFirebase);
+                if(userType=='employee')
                 dispatch(setTransactions(transactionsFirebase));
+                else
+                dispatch(setClientTransactions({transactions:transactionsFirebase,accountId:selectedAccount}))
             }
         }
         fetchData()

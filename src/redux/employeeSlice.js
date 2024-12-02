@@ -305,6 +305,7 @@ const employeeSlice = createSlice({
             state.clients = action.payload;
         },
         setAccounts(state,action){
+            console.log("Setted Accounts");
             state.accounts = action.payload;
         },
         setTransactions(state,action){

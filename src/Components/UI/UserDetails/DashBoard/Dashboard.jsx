@@ -84,6 +84,7 @@ export default function Dashboard({ userType }) {
         ]
         if(selectedAccountEmployee!=null){
             dashboardTabs=[...dashboardTabs,
+                { link: `clients/${client.clientId}/accounts/${selectedAccountEmployee}`, title: 'Client Accounts' },
                 { link: `clients/${client.clientId}/accounts/${selectedAccountEmployee}/transactions`, title: 'Account Transactions' },
                 { link: `clients/${client.clientId}/accounts/${selectedAccountEmployee}/loans`, title: 'Account Loans' },
             ]
